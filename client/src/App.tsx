@@ -8,13 +8,11 @@ import HomePage from "./pages/HomePage";
 import CommunityPage from "./pages/CommunityPage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import OpportunityDetailPage from "./pages/OpportunityDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 let nextNotificationId = 1;
 
 function App() {
-  // Queue — notifications are added at the BACK (end of the array) by
-  // whichever action triggered them, and always displayed/removed from the
-  // FRONT (index 0) by ToastQueue, one at a time, in the order they happened.
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
 
   function addNotification(message: string, tone: NotificationTone) {
@@ -53,9 +51,8 @@ function App() {
             path="/opportunities/:id"
             element={<OpportunityDetailPage onNotify={addNotification} />}
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        {/* <CommunitySection onNotify={addNotification} />
-        <OpportunitiesSection onNotify={addNotification} /> */}
       </main>
 
       <Footer />

@@ -879,3 +879,31 @@ textarea {
   gap: 12px;
   color: #6b7089;
 }
+
+.not-found-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.not-found-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.not-found-message {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.not-found-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 6px;
+}
