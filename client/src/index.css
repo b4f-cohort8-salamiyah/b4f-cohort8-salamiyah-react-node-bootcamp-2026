@@ -879,3 +879,26 @@ textarea {
   gap: 12px;
   color: #6b7089;
 }
+
+.opportunity-detail-not-found {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #6b7089;
+}
+
+.not-found-content {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.not-found-message {
+  color: #6b7089;
+  font-size: 14px;
+  max-width: 480px;
+  margin-bottom: 6px;
+}
