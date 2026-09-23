@@ -3,16 +3,13 @@ import type { Opportunity, OpportunityType, WorkMode } from "../types";
 import { applyToOpportunity, fetchOpportunities } from "../api";
 import OpportunityFilters from "./OpportunityFilters";
 import OpportunityList from "./OpportunityList";
-import BackToPreviousOpportunity from "./BackToPreviousOpportunity";
 import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
+import { useNotify } from "../context/NotificationContext";
 
-interface OpportunitiesSectionProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
-
-function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
+function OpportunitiesSection() {
+  const { notify } = useNotify();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -30,14 +27,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
   // React still sees a new reference and re-renders, the same immutability
   // discipline already used for every array/object update in this course.
   const [savedIds, setSavedIds] = useState<Set<number>>(new Set());
-
-  // Stack — ids of opportunities the visitor navigated AWAY from while
-  // viewing details, most recent push last (the "top"). Opening a new
-  // opportunity's details while another is already open pushes the one being
-  // left; "Back" pops the top and makes it current again. There is no
-  // deduplication and no cap — this is a plain LIFO history, not an MRU list.
-  const [detailHistory, setDetailHistory] = useState<number[]>([]);
-  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const [applyingId, setApplyingId] = useState<number | null>(null);
 
@@ -58,37 +47,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
   useEffect(() => {
     loadOpportunities();
   }, []);
-
-  function handleToggleExpanded(id: number) {
-    if (expandedId === id) {
-      // Closing the one that's already open — this is not a navigation to a
-      // different opportunity, so nothing is pushed onto the history Stack.
-      setExpandedId(null);
-      return;
-    }
-
-    if (expandedId !== null) {
-      // Moving from one open opportunity to a different one: push the one
-      // being left onto the Stack before switching.
-      setDetailHistory([...detailHistory, expandedId]);
-    }
-
-    setExpandedId(id);
-  }
-
-  function handleBack() {
-    if (detailHistory.length === 0) {
-      return;
-    }
-
-    const previousId = detailHistory[detailHistory.length - 1];
-    const remainingHistory = detailHistory.filter(
-      (_id, index) => index !== detailHistory.length - 1,
-    );
-
-    setDetailHistory(remainingHistory);
-    setExpandedId(previousId);
-  }
 
   function handleToggleSaved(id: number) {
     const updated = new Set(savedIds);
@@ -117,10 +75,13 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
       });
 
       setOpportunities(updatedOpportunities);
-      onNotify(`Applied to ${updated.title}.`, "success");
+      notify(`Applied to ${updated.title}.`, "success");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Could not submit your application.";
-      onNotify(message, "error");
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not submit your application.";
+      notify(message, "error");
     } finally {
       setApplyingId(null);
     }
@@ -142,14 +103,13 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
     opportunitiesById[opportunity.id] = opportunity;
   }
 
-  const previousOpportunity: Opportunity | null =
-    detailHistory.length > 0 ? opportunitiesById[detailHistory[detailHistory.length - 1]] : null;
-
   const search = searchText.toLowerCase();
 
   const visibleOpportunities = opportunities.filter((opportunity) => {
     const matchesSkill =
-      opportunity.skills.find((skill) => skill.toLowerCase().includes(search)) !== undefined;
+      opportunity.skills.find((skill) =>
+        skill.toLowerCase().includes(search),
+      ) !== undefined;
 
     const matchesSearch =
       opportunity.title.toLowerCase().includes(search) ||
@@ -200,8 +160,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
               visibleCount={visibleOpportunities.length}
               totalCount={opportunities.length}
             />
-
-            <BackToPreviousOpportunity previousOpportunity={previousOpportunity} onBack={handleBack} />
           </>
         )}
       </div>
@@ -225,8 +183,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
               opportunities={visibleOpportunities}
               savedIds={savedIds}
               onToggleSaved={handleToggleSaved}
-              expandedId={expandedId}
-              onToggleExpanded={handleToggleExpanded}
               onApply={handleApply}
               applyingId={applyingId}
             />
