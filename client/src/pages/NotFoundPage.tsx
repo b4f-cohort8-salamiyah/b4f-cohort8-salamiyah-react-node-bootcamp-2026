@@ -2,23 +2,20 @@ import { Link } from "react-router-dom";
 
 function NotFoundPage() {
   return (
-    <main className="home-page">
-      <h1 className="home-title">Page not found</h1>
-
-      <p className="home-subtitle">
-        The page you are looking for does not exist or the address is incorrect.
-      </p>
-
-      <div className="home-links">
-        <Link to="/" className="home-link-card">
-          <span className="home-link-title">Back to Home</span>
-
-          <span className="home-link-description">
-            Return to the B4F Hub home page.
-          </span>
-        </Link>
+    <section className="panel not-found-page">
+      <div className="panel-scroll">
+        <div className="not-found-content">
+          <h2 className="panel-title">Page not found</h2>
+          <p className="not-found-message">
+            There is no page at this address. Double-check the link, or head
+            back to the homepage.
+          </p>
+          <Link to="/" className="view-details-button">
+            Back to Home
+          </Link>
+        </div>
       </div>
-    </main>
+    </section>
   );
 }
 

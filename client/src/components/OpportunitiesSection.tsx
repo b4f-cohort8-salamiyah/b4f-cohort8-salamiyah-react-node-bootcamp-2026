@@ -6,12 +6,10 @@ import OpportunityList from "./OpportunityList";
 import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
+import { useNotify } from "../context/NotificationContext";
 
-interface OpportunitiesSectionProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
-
-function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
+function OpportunitiesSection() {
+  const { notify } = useNotify();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -77,13 +75,13 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
       });
 
       setOpportunities(updatedOpportunities);
-      onNotify(`Applied to ${updated.title}.`, "success");
+      notify(`Applied to ${updated.title}.`, "success");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Could not submit your application.";
-      onNotify(message, "error");
+      notify(message, "error");
     } finally {
       setApplyingId(null);
     }
