@@ -4,6 +4,7 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationProvider } from "./context/NotificationContext";
+import { SavedOpportunitiesProvider } from "./context/SavedOpportunitiesContext";
 
 const rootElement = document.getElementById("root");
 
@@ -12,7 +13,9 @@ if (rootElement) {
     <StrictMode>
       <BrowserRouter>
         <NotificationProvider>
-          <App />
+          <SavedOpportunitiesProvider>
+            <App />
+          </SavedOpportunitiesProvider>
         </NotificationProvider>
       </BrowserRouter>
     </StrictMode>,
