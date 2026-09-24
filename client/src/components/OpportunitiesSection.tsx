@@ -7,9 +7,11 @@ import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
+import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
+  const { savedIds } = useSavedOpportunities();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -26,7 +28,6 @@ function OpportunitiesSection() {
   // every toggle (new Set(savedIds), then .add()/.delete() on the copy) so
   // React still sees a new reference and re-renders, the same immutability
   // discipline already used for every array/object update in this course.
-  const [savedIds, setSavedIds] = useState<Set<number>>(new Set());
 
   const [applyingId, setApplyingId] = useState<number | null>(null);
 
@@ -47,18 +48,6 @@ function OpportunitiesSection() {
   useEffect(() => {
     loadOpportunities();
   }, []);
-
-  function handleToggleSaved(id: number) {
-    const updated = new Set(savedIds);
-
-    if (updated.has(id)) {
-      updated.delete(id);
-    } else {
-      updated.add(id);
-    }
-
-    setSavedIds(updated);
-  }
 
   async function handleApply(id: number) {
     setApplyingId(id);
@@ -181,8 +170,6 @@ function OpportunitiesSection() {
           ) : (
             <OpportunityList
               opportunities={visibleOpportunities}
-              savedIds={savedIds}
-              onToggleSaved={handleToggleSaved}
               onApply={handleApply}
               applyingId={applyingId}
             />
