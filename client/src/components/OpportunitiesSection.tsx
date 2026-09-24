@@ -8,6 +8,7 @@ import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import RecentlyViewedList from "./RecentlyViewedList";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
@@ -132,26 +133,28 @@ function OpportunitiesSection() {
 
   return (
     <section className="panel opportunities-panel">
-      <div className="panel-header">
-        <h2 className="panel-title">Opportunities</h2>
+<div className="panel-header">
+  <h2 className="panel-title">Opportunities</h2>
 
-        {!isLoading && !hasError && (
-          <>
-            <OpportunityFilters
-              searchText={searchText}
-              onSearchChange={setSearchText}
-              typeFilter={typeFilter}
-              onTypeChange={setTypeFilter}
-              workModeFilter={workModeFilter}
-              onWorkModeChange={setWorkModeFilter}
-              savedOnly={savedOnly}
-              onSavedOnlyChange={setSavedOnly}
-              visibleCount={visibleOpportunities.length}
-              totalCount={opportunities.length}
-            />
-          </>
-        )}
-      </div>
+  {!isLoading && !hasError && (
+    <>
+      <OpportunityFilters
+        searchText={searchText}
+        onSearchChange={setSearchText}
+        typeFilter={typeFilter}
+        onTypeChange={setTypeFilter}
+        workModeFilter={workModeFilter}
+        onWorkModeChange={setWorkModeFilter}
+        savedOnly={savedOnly}
+        onSavedOnlyChange={setSavedOnly}
+        visibleCount={visibleOpportunities.length}
+        totalCount={opportunities.length}
+      />
+    </>
+  )}
+
+  <RecentlyViewedList />
+</div>
 
       <div className="panel-scroll">
         {isLoading && <LoadingMessage label="Loading opportunities..." />}

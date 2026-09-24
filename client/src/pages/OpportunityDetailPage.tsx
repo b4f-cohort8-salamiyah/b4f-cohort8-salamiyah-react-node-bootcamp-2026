@@ -5,6 +5,7 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import { useRecentlyViewed } from "../context/RecentlyViewedContext";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -23,26 +24,31 @@ function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { notify } = useNotify();
+  const { recordView } = useRecentlyViewed();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
-  async function load() {
-    setIsLoading(true);
-    setHasError(false);
-    try {
-      const opportunities = await fetchOpportunities();
-      const match = opportunities.find((el) => String(el.id) === id) ?? null;
+async function load() {
+  setIsLoading(true);
+  setHasError(false);
+  try {
+    const opportunities = await fetchOpportunities();
+    const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
-      setOpportunity(match);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setHasError(true);
-      setIsLoading(false);
+    if (match) {
+      recordView({ id: match.id, title: match.title });
     }
+
+    setOpportunity(match);
+    setIsLoading(false);
+  } catch (error) {
+    console.log(error);
+    setHasError(true);
+    setIsLoading(false);
   }
+}
 
   async function handleApply() {
     if (!opportunity) return;
