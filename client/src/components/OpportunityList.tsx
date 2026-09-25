@@ -3,16 +3,13 @@ import OpportunityCard from "./OpportunityCard";
 
 interface OpportunityListProps {
   opportunities: Opportunity[];
-  savedIds: Set<number>;
-  onToggleSaved: (id: number) => void;
+
   onApply: (id: number) => void;
   applyingId: number | null;
 }
 
 function OpportunityList({
   opportunities,
-  savedIds,
-  onToggleSaved,
   onApply,
   applyingId,
 }: OpportunityListProps) {
@@ -22,8 +19,6 @@ function OpportunityList({
         <OpportunityCard
           key={opportunity.id}
           opportunity={opportunity}
-          isSaved={savedIds.has(opportunity.id)}
-          onToggleSaved={onToggleSaved}
           onApply={onApply}
           isApplying={applyingId === opportunity.id}
         />
