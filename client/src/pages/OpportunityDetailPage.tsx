@@ -4,10 +4,9 @@ import { Opportunity } from "../types";
 import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
-
-interface OpportunityDetailPageProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
+import { useNotify } from "../context/NotificationContext";
+import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -22,13 +21,15 @@ const WORK_MODE_LABELS = {
   "on-site": "On-site",
 };
 
-function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
+function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { notify } = useNotify();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const { recordView } = useRecentlyViewed();
 
   async function load() {
     setIsLoading(true);
@@ -54,13 +55,13 @@ function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
     try {
       const updated = await applyToOpportunity(opportunity.id);
       setOpportunity(updated);
-      onNotify(`Applied to ${updated.title}.`, "success");
+      notify(`Applied to ${updated.title}.`, "success");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Could not submit your application.";
-      onNotify(message, "error");
+      notify(message, "error");
     } finally {
       setIsApplying(false);
     }
@@ -79,8 +80,15 @@ function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
     load();
   }, [id]);
 
+  useEffect(() => {
+  if (opportunity) {
+    recordView(opportunity.id, opportunity.title);
+  }
+}, [opportunity]);
   return (
+    
     <section className="panel opportunity-detail-page">
+      
       <div className="panel-header">
         <button className="back-button" onClick={() => navigate(-1)}>
           ← Back
@@ -99,6 +107,7 @@ function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
         )}
 
         {!isLoading && !hasError && opportunity && (
+          
           <div className="opportunity-detail-content">
             <div className="opportunity-card-header">
               <div className="company-logo">{opportunity.companyLogo}</div>
@@ -144,6 +153,7 @@ function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
                   ? "Applying..."
                   : "Apply"}
             </button>
+            <RecentlyViewedList id={opportunity.id} />  
           </div>
         )}
 

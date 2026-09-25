@@ -879,28 +879,59 @@ textarea {
   gap: 12px;
   color: #6b7089;
 }
-.not-found-page {
+
+.opportunity-detail-not-found {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height:450px;   
   gap: 12px;
-  flex: 1;
-}
-
-.not-found-para {
   color: #6b7089;
 }
 
-.back-button {
-  
-  border: 1px solid #e4e6f0;
-  border-radius: 8px;
+.not-found-content {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.not-found-message {
+  color: #6b7089;
+  font-size: 14px;
+  max-width: 480px;
+  margin-bottom: 6px;
+}
+
+.not-found-message {
+  color: #6b7089;
+  font-size: 14px;
+  max-width: 480px;
+  margin-bottom: 6px;
+}
+
+.saved-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  padding: 0 4px;
+  border-radius: 999px;
   background-color: #4f46e5;
-  color: #eef0ff;
-  padding: 7px 14px;
-  text-decoration: none;
-  font-weight:500;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.clear-button{
+  background-color: #e0543b;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 10px;
+  margin: 20px;
 }

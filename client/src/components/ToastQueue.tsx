@@ -1,9 +1,4 @@
-import type { AppNotification } from "../types";
-
-interface ToastQueueProps {
-  notifications: AppNotification[];
-  onDismissFront: () => void;
-}
+import { useNotify } from "../context/NotificationContext";
 
 // Notifications are a genuine Queue: several actions across the app can each
 // add one (Post published, Like failed, Applied, ...), they must be shown in
@@ -15,7 +10,8 @@ interface ToastQueueProps {
 // Queue itself the thing being assessed, not a timer/effect-cleanup pattern.
 // An automatic timeout is a reasonable optional enhancement (see the
 // requirements document), not something this reference solution requires.
-function ToastQueue({ notifications, onDismissFront }: ToastQueueProps) {
+function ToastQueue() {
+  const { notifications, dismissFront } = useNotify();
   const current = notifications.length > 0 ? notifications[0] : null;
 
   if (!current) {
@@ -25,11 +21,17 @@ function ToastQueue({ notifications, onDismissFront }: ToastQueueProps) {
   return (
     <div className={`toast toast-${current.tone}`} role="status">
       <p>{current.message}</p>
-      <button className="toast-dismiss" onClick={onDismissFront} aria-label="Dismiss notification">
+      <button
+        className="toast-dismiss"
+        onClick={dismissFront}
+        aria-label="Dismiss notification"
+      >
         ×
       </button>
       {notifications.length > 1 && (
-        <span className="toast-queue-count">+{notifications.length - 1} more</span>
+        <span className="toast-queue-count">
+          +{notifications.length - 1} more
+        </span>
       )}
     </div>
   );

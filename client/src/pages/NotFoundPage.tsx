@@ -1,17 +1,22 @@
 import { Link } from "react-router-dom";
 
 function NotFoundPage() {
-     return (
-    <div className="not-found-page">
-      <p className="not-found-para">Page not found </p>
-      <p className="not-found-para">The address you tried does not exist</p>
-      <Link to="/" className="back-button">
-        Back
-      </Link>
-    </div>
+  return (
+    <section className="panel not-found-page">
+      <div className="panel-scroll">
+        <div className="not-found-content">
+          <h2 className="panel-title">Page not found</h2>
+          <p className="not-found-message">
+            There is no page at this address. Double-check the link, or head
+            back to the homepage.
+          </p>
+          <Link to="/" className="view-details-button">
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
-
-
 
 export default NotFoundPage;

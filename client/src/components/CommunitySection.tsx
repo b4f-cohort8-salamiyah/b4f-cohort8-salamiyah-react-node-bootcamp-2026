@@ -7,17 +7,17 @@ import PostList from "./PostList";
 import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
+import { useNotify } from "../context/NotificationContext";
 
-interface CommunitySectionProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
-
-function CommunitySection({ onNotify }: CommunitySectionProps) {
+function CommunitySection() {
+  const { notify } = useNotify();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const [activeCategory, setActiveCategory] = useState<PostCategory | "all">("all");
+  const [activeCategory, setActiveCategory] = useState<PostCategory | "all">(
+    "all",
+  );
   const [searchText, setSearchText] = useState("");
   const [likedOnly, setLikedOnly] = useState(false);
   const [updatingPostId, setUpdatingPostId] = useState<number | null>(null);
@@ -43,7 +43,7 @@ function CommunitySection({ onNotify }: CommunitySectionProps) {
   async function handleCreatePost(content: string, category: PostCategory) {
     const newPost = await createPost(content, category);
     setPosts([newPost, ...posts]);
-    onNotify("Your post was published.", "success");
+    notify("Your post was published.", "success");
   }
 
   async function handleToggleLike(post: Post) {
@@ -62,7 +62,7 @@ function CommunitySection({ onNotify }: CommunitySectionProps) {
 
       setPosts(updatedPosts);
     } catch {
-      onNotify("Could not update your like. Please try again.", "error");
+      notify("Could not update your like. Please try again.", "error");
     } finally {
       setUpdatingPostId(null);
     }
@@ -80,7 +80,8 @@ function CommunitySection({ onNotify }: CommunitySectionProps) {
     }
 
     const matchesSearch =
-      post.author.toLowerCase().includes(search) || post.content.toLowerCase().includes(search);
+      post.author.toLowerCase().includes(search) ||
+      post.content.toLowerCase().includes(search);
 
     let matchesLiked = true;
 
@@ -96,7 +97,9 @@ function CommunitySection({ onNotify }: CommunitySectionProps) {
       <div className="panel-header">
         <h2 className="panel-title">Community</h2>
 
-        {!isLoading && !hasError && <PostComposer onSubmit={handleCreatePost} />}
+        {!isLoading && !hasError && (
+          <PostComposer onSubmit={handleCreatePost} />
+        )}
 
         {!isLoading && !hasError && (
           <PostFilters
