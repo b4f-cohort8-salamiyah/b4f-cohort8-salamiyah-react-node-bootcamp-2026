@@ -924,3 +924,68 @@ textarea {
   font-size: 11px;
   font-weight: 700;
 }
+/* ---------- Recently viewed ---------- */
+
+.recently-viewed {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #eceef6;
+}
+
+.recently-viewed-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #9198b3;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.recently-viewed-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.recently-viewed-link {
+  display: inline-block;
+  background-color: #f0f1f9;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  color: #4a4f6a;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  text-decoration: none;
+}
+
+.recently-viewed-link:hover {
+  border-color: #c9cbe8;
+  color: #1e2130;
+}
+.recently-viewed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.recently-viewed-header .recently-viewed-title {
+  margin-bottom: 0;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  color: #9198b3;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.clear-button:hover {
+  color: #b3392e;
+  background-color: #fde7e6;
+}

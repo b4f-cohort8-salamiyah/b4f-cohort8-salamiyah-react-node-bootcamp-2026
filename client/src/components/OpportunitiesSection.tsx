@@ -8,6 +8,7 @@ import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import RecentlyViewedList from "./RecentlyViewedList";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
@@ -149,6 +150,7 @@ function OpportunitiesSection() {
               visibleCount={visibleOpportunities.length}
               totalCount={opportunities.length}
             />
+            <RecentlyViewedList />
           </>
         )}
       </div>

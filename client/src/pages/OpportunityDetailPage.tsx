@@ -5,6 +5,8 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -27,6 +29,7 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const { recordView } = useRecentlyViewed();
 
   async function load() {
     setIsLoading(true);
@@ -76,6 +79,11 @@ function OpportunityDetailPage() {
   useEffect(() => {
     load();
   }, [id]);
+  useEffect(() => {
+    if (opportunity) {
+      recordView({ id: opportunity.id, title: opportunity.title });
+    }
+  }, [opportunity?.id]);
 
   return (
     <section className="panel opportunity-detail-page">
@@ -142,6 +150,7 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+            <RecentlyViewedList excludeId={opportunity.id} />
           </div>
         )}
 
