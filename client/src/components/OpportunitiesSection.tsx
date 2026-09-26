@@ -6,12 +6,13 @@ import OpportunityList from "./OpportunityList";
 import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
+import RecentlyViewedList from "./RecentlyViewedList";
+import { useNotify } from "../context/NotificationContext";
+import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
 
-interface OpportunitiesSectionProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
-
-function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
+function OpportunitiesSection() {
+  const { notify } = useNotify();
+  const { savedIds } = useSavedOpportunities();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -20,15 +21,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
   const [typeFilter, setTypeFilter] = useState<OpportunityType | "all">("all");
   const [workModeFilter, setWorkModeFilter] = useState<WorkMode | "all">("all");
   const [savedOnly, setSavedOnly] = useState(false);
-
-  // Hash Set — which opportunity ids are currently saved. A genuine native
-  // Set used for uniqueness/membership (new Set(), .has(), .add()) — one
-  // valid implementation choice, not a claim about the exact technique this
-  // cohort was taught (see INSTRUCTOR_GUIDE.md). A fresh Set is created on
-  // every toggle (new Set(savedIds), then .add()/.delete() on the copy) so
-  // React still sees a new reference and re-renders, the same immutability
-  // discipline already used for every array/object update in this course.
-  const [savedIds, setSavedIds] = useState<Set<number>>(new Set());
 
   const [applyingId, setApplyingId] = useState<number | null>(null);
 
@@ -50,18 +42,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
     loadOpportunities();
   }, []);
 
-  function handleToggleSaved(id: number) {
-    const updated = new Set(savedIds);
-
-    if (updated.has(id)) {
-      updated.delete(id);
-    } else {
-      updated.add(id);
-    }
-
-    setSavedIds(updated);
-  }
-
   async function handleApply(id: number) {
     setApplyingId(id);
 
@@ -77,27 +57,18 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
       });
 
       setOpportunities(updatedOpportunities);
-      onNotify(`Applied to ${updated.title}.`, "success");
+      notify(`Applied to ${updated.title}.`, "success");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Could not submit your application.";
-      onNotify(message, "error");
+      notify(message, "error");
     } finally {
       setApplyingId(null);
     }
   }
 
-  // Hash Table — a plain key-value object, opportunities keyed by id,
-  // rebuilt from the current array each render, read/written with bracket
-  // notation. One valid implementation choice for key -> value lookup, not a
-  // claim about the exact technique this cohort was taught (see
-  // INSTRUCTOR_GUIDE.md). Typed loosely here on purpose: no confirmed course
-  // precedent exists for typing a dynamic, computed-key lookup object in
-  // TypeScript, so this deliberately does not introduce one (no `Record<>`,
-  // no index signature) — everything that reads OUT of this table below is
-  // still normally typed.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const opportunitiesById: any = {};
 
@@ -167,6 +138,9 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
       </div>
 
       <div className="panel-scroll">
+        {/* CORE: Recently Viewed Strip rendered inside panel scroll */}
+        <RecentlyViewedList />
+
         {isLoading && <LoadingMessage label="Loading opportunities..." />}
 
         {!isLoading && hasError && (
@@ -183,8 +157,6 @@ function OpportunitiesSection({ onNotify }: OpportunitiesSectionProps) {
           ) : (
             <OpportunityList
               opportunities={visibleOpportunities}
-              savedIds={savedIds}
-              onToggleSaved={handleToggleSaved}
               onApply={handleApply}
               applyingId={applyingId}
             />
