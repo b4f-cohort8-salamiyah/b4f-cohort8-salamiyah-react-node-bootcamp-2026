@@ -924,3 +924,42 @@ textarea {
   font-size: 11px;
   font-weight: 700;
 }
+/* ---------- Recently viewed ---------- */
+
+.recently-viewed {
+  margin-top: 4px;
+}
+
+.recently-viewed-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7089;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 8px;
+}
+
+.recently-viewed-list {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recently-viewed-link {
+  display: inline-block;
+  background-color: #f8f9fd;
+  border: 1px solid #eceef6;
+  border-radius: 20px;
+  color: #4a4f6a;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  text-decoration: none;
+}
+
+.recently-viewed-link:hover {
+  border-color: #c9cbe8;
+  background-color: #eef0ff;
+  color: #4f46e5;
+}
