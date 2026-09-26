@@ -5,6 +5,8 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import { useRecentlyViewed } from "../context/ViewedContext";
+import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -28,6 +30,8 @@ function OpportunityDetailPage() {
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
+  const { recordView } = useRecentlyViewed();
+
   async function load() {
     setIsLoading(true);
     setHasError(false);
@@ -35,7 +39,12 @@ function OpportunityDetailPage() {
       const opportunities = await fetchOpportunities();
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
-      setOpportunity(match);
+      if (match) {
+        setOpportunity(match);
+        recordView({ id: match.id, title: match.title });
+      } else {
+        setOpportunity(null);
+      }
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -85,6 +94,8 @@ function OpportunityDetailPage() {
         </button>
       </div>
       <div className="panel-scroll">
+        <RecentlyViewedList currentId={opportunity?.id} />
+
         {!isLoading && hasError && (
           <ErrorMessage
             message="We could not load this opportunity."
