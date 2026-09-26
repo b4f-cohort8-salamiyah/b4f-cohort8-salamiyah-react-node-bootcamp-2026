@@ -14,9 +14,14 @@ const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
  function RecentlyViewedProvider({ children }: { children: ReactNode }) {
   const [entries, setEntries] = useState<RecentlyViewedEntry[]>([]);
 
-  function recordView(entry: RecentlyViewedEntry) {
-    setEntries((currentEntries) => [...currentEntries, entry]);
-  }
+   function recordView(entry: RecentlyViewedEntry) {
+     setEntries((currentEntries) =>
+       [entry, ...currentEntries.filter((item) => item.id !== entry.id)].slice(
+         0,
+         5,
+       ),
+     );
+   }
 
   return (
     <RecentlyViewedContext.Provider value={{ entries, recordView }}>
