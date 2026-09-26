@@ -1,19 +1,38 @@
 import { Link } from "react-router-dom";
 import { useRecentlyViewed } from "../context/RecentlyViewedContext";
 
-function RecentlyViewedList() {
-  const { entries } = useRecentlyViewed();
+interface RecentlyViewedListProps {
+  excludeId?: number;
+}
 
-  if (entries.length === 0) {
+function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
+  const { entries, clearAll } = useRecentlyViewed();
+
+  const visibleEntries =
+    excludeId === undefined
+      ? entries
+      : entries.filter((entry) => entry.id !== excludeId);
+
+  if (visibleEntries.length === 0) {
     return null;
   }
 
   return (
     <section className="recently-viewed">
-      <h2 className="recently-viewed-title">Recently viewed</h2>
+      <div className="recently-viewed-header">
+        <h2 className="recently-viewed-title">Recently viewed</h2>
+
+        <button
+          type="button"
+          className="recently-viewed-clear"
+          onClick={clearAll}
+        >
+          Clear
+        </button>
+      </div>
 
       <div className="recently-viewed-list">
-        {entries.map((entry) => (
+        {visibleEntries.map((entry) => (
           <Link
             key={entry.id}
             to={`/opportunities/${entry.id}`}

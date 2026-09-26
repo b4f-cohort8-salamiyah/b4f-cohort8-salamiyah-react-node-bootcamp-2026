@@ -5,6 +5,7 @@ import { RecentlyViewedEntry } from "../types";
 interface RecentlyViewedContextValue {
   entries: RecentlyViewedEntry[];
   recordView: (entry: RecentlyViewedEntry) => void;
+  clearAll: () => void;
 }
 
 const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
@@ -22,9 +23,13 @@ const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
        ),
      );
    }
+   function clearAll() {
+     setEntries([]);
+   }
+
 
   return (
-    <RecentlyViewedContext.Provider value={{ entries, recordView }}>
+    <RecentlyViewedContext.Provider value={{ entries, recordView, clearAll }}>
       {children}
     </RecentlyViewedContext.Provider>
   );

@@ -6,6 +6,7 @@ import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
 import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import RecentlyViewedList from "../components/RecentlyViewedList";
 
 
 const TYPE_LABELS = {
@@ -156,6 +157,7 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+            <RecentlyViewedList excludeId={opportunity.id} />
           </div>
         )}
 
