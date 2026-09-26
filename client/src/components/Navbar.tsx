@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
 
 function Navbar() {
+  const { savedIds } = useSavedOpportunities();
+
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
   }
@@ -24,6 +27,9 @@ function Navbar() {
         </NavLink>
         <NavLink to="/opportunities" className={navLinkClassName}>
           Opportunities
+          {savedIds.size > 0 && (
+            <span className="saved-count-badge">{savedIds.size}</span>
+          )}
         </NavLink>
       </nav>
     </header>
