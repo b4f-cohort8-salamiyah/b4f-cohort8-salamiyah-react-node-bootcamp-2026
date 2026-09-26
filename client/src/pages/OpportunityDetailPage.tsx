@@ -4,10 +4,7 @@ import { Opportunity } from "../types";
 import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
-
-interface OpportunityDetailPageProps {
-  onNotify: (message: string, tone: "success" | "error") => void;
-}
+import { useNotify } from "../context/NotificationContext";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -22,9 +19,10 @@ const WORK_MODE_LABELS = {
   "on-site": "On-site",
 };
 
-function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
+function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { notify } = useNotify();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -54,13 +52,13 @@ function OpportunityDetailPage({ onNotify }: OpportunityDetailPageProps) {
     try {
       const updated = await applyToOpportunity(opportunity.id);
       setOpportunity(updated);
-      onNotify(`Applied to ${updated.title}.`, "success");
+      notify(`Applied to ${updated.title}.`, "success");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Could not submit your application.";
-      onNotify(message, "error");
+      notify(message, "error");
     } finally {
       setIsApplying(false);
     }
