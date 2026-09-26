@@ -9,6 +9,7 @@ import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 
 import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import RecentlyViewedList from "./RecentlyViewedList";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
@@ -153,6 +154,7 @@ function OpportunitiesSection() {
           </>
         )}
       </div>
+      <RecentlyViewedList />
 
       <div className="panel-scroll">
         {isLoading && <LoadingMessage label="Loading opportunities..." />}

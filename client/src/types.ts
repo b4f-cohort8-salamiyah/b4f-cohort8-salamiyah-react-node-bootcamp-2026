@@ -38,3 +38,7 @@ export interface AppNotification {
   message: string;
   tone: NotificationTone;
 }
+export interface RecentlyViewedEntry {
+   id: number;
+   title: string;
+ }

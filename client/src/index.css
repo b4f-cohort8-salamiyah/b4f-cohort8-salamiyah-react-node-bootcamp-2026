@@ -924,3 +924,42 @@ textarea {
   font-size: 11px;
   font-weight: 700;
 }
+/* ---------- Recently viewed opportunities ---------- */
+
+.recently-viewed {
+  margin: 0 20px 16px;
+  padding: 12px 14px;
+  background-color: #f8f9fd;
+  border: 1px solid #e4e6f0;
+  border-radius: 10px;
+}
+
+.recently-viewed-title {
+  margin-bottom: 8px;
+  color: #1e2130;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.recently-viewed-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recently-viewed-link {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid #e4e6f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.recently-viewed-link:hover {
+  border-color: #4f46e5;
+  background-color: #eef0ff;
+}
