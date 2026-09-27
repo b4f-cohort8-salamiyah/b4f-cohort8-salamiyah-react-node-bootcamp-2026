@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 interface SavedOpportunitiesState {
   savedIds: number[];
@@ -20,9 +21,23 @@ const savedOpportunitiesSlice = createSlice({
         state.savedIds.push(id);
       }
     },
+    clearAllSaved(state) {
+      state.savedIds = [];
+    },
   },
 });
 
-export const { toggleSaved } = savedOpportunitiesSlice.actions;
+export function selectSavedIds(state: RootState) {
+  return state.savedOpportunities.savedIds;
+}
 
+export function selectSavedCount(state: RootState) {
+  return state.savedOpportunities.savedIds.length;
+}
+
+export function selectIsSaved(state: RootState, id: number) {
+  return state.savedOpportunities.savedIds.includes(id);
+}
+
+export const { toggleSaved, clearAllSaved } = savedOpportunitiesSlice.actions;
 export default savedOpportunitiesSlice.reducer;

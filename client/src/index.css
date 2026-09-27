@@ -978,3 +978,20 @@ textarea {
   border-color: #c9cbe8;
   color: #4a4f6a;
 }
+
+.clear-saved-button {
+  align-self: flex-start;
+  border: 1px solid #d9dbee;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.clear-saved-button:hover {
+  border-color: #4f46e5;
+  background-color: #f4f4ff;
+}
