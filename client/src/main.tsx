@@ -16,11 +16,9 @@ if (rootElement) {
       <BrowserRouter>
         <Provider store={store}>
           <NotificationProvider>
-            {/* <SavedOpportunitiesProvider> */}
             <RecentlyViewedProvider>
               <App />
             </RecentlyViewedProvider>
-            {/* </SavedOpportunitiesProvider> */}
           </NotificationProvider>
         </Provider>
       </BrowserRouter>

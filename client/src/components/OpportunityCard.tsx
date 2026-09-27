@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { toggleSaved } from "../store/savedOpportunitiesSlice";
+import { selectIsSaved, toggleSaved } from "../store/savedOpportunitiesSlice";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
@@ -29,10 +29,10 @@ function OpportunityCard({
   isApplying,
 }: OpportunityCardProps) {
   const dispatch = useDispatch();
-  const savedIds = useSelector(
-    (state: RootState) => state.savedOpportunities.savedIds,
+
+  const isSaved = useSelector((state: RootState) =>
+    selectIsSaved(state, opportunity.id),
   );
-  const isSaved = savedIds.includes(opportunity.id);
 
   return (
     <li className="opportunity-card">

@@ -8,14 +8,17 @@ import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 import RecentlyViewedList from "./RecentlyViewedList";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearAllSaved,
+  selectSavedIds,
+} from "../store/savedOpportunitiesSlice";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
-  const savedIds = useSelector(
-    (state: RootState) => state.savedOpportunities.savedIds,
-  );
+  const dispatch = useDispatch();
+  const savedIds = useSelector(selectSavedIds);
+
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -138,6 +141,15 @@ function OpportunitiesSection() {
     <section className="panel opportunities-panel">
       <div className="panel-header">
         <h2 className="panel-title">Opportunities</h2>
+
+        {savedIds.length > 0 && (
+          <button
+            className="clear-saved-button"
+            onClick={() => dispatch(clearAllSaved())}
+          >
+            Clear saved ({savedIds.length})
+          </button>
+        )}
 
         <RecentlyViewedList />
 
