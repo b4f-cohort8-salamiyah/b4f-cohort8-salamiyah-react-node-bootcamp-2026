@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import { useSelector } from "react-redux";
+import { selectSavedCount } from "../store/savedOpportunitiesSlice";
 
 function Navbar() {
-  const { savedIds } = useSavedOpportunities();
+  const savedCount = useSelector(selectSavedCount);
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
@@ -27,8 +28,8 @@ function Navbar() {
         </NavLink>
         <NavLink to="/opportunities" className={navLinkClassName}>
           Opportunities
-          {savedIds.size > 0 && (
-            <span className="saved-count-badge">{savedIds.size}</span>
+          {savedCount > 0 && (
+            <span className="saved-count-badge">{savedCount}</span>
           )}
         </NavLink>
       </nav>

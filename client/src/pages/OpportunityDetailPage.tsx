@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Opportunity } from "../types";
 import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import { recordView } from "../store/recentlyViewedSlice";
+import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -23,6 +26,8 @@ function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { notify } = useNotify();
+  const dispatch = useDispatch();
+
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -36,6 +41,11 @@ function OpportunityDetailPage() {
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
       setOpportunity(match);
+
+      if (match) {
+        dispatch(recordView({ id: match.id, title: match.title }));
+      }
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -97,52 +107,56 @@ function OpportunityDetailPage() {
         )}
 
         {!isLoading && !hasError && opportunity && (
-          <div className="opportunity-detail-content">
-            <div className="opportunity-card-header">
-              <div className="company-logo">{opportunity.companyLogo}</div>
-              <div className="opportunity-card-title-block">
-                <h2 className="opportunity-title">{opportunity.title}</h2>
-                <p className="opportunity-company">{opportunity.company}</p>
+          <>
+            <RecentlyViewedList excludeId={opportunity.id} />
+
+            <div className="opportunity-detail-content">
+              <div className="opportunity-card-header">
+                <div className="company-logo">{opportunity.companyLogo}</div>
+                <div className="opportunity-card-title-block">
+                  <h2 className="opportunity-title">{opportunity.title}</h2>
+                  <p className="opportunity-company">{opportunity.company}</p>
+                </div>
               </div>
-            </div>
-            <div className="opportunity-badges">
-              <span className={`type-badge type-${opportunity.type}`}>
-                {TYPE_LABELS[opportunity.type]}
-              </span>
-              <span className="work-mode-badge">
-                {WORK_MODE_LABELS[opportunity.workMode]}
-              </span>
-              <span className="location-badge">{opportunity.location}</span>
-            </div>
-
-            <div className="skills-row">
-              {opportunity.skills.map((skill) => (
-                <span key={skill} className="skill-tag">
-                  {skill}
+              <div className="opportunity-badges">
+                <span className={`type-badge type-${opportunity.type}`}>
+                  {TYPE_LABELS[opportunity.type]}
                 </span>
-              ))}
-            </div>
-            <div className="opportunity-details">
-              <p className="opportunity-description">
-                {opportunity.description}
-              </p>
-              <p className="opportunity-deadline">
-                Apply by {formatDeadline(opportunity.deadline)}
-              </p>
-            </div>
+                <span className="work-mode-badge">
+                  {WORK_MODE_LABELS[opportunity.workMode]}
+                </span>
+                <span className="location-badge">{opportunity.location}</span>
+              </div>
 
-            <button
-              className={`apply-button ${opportunity.applied ? "applied" : ""}`}
-              onClick={handleApply}
-              disabled={opportunity.applied || isApplying}
-            >
-              {opportunity.applied
-                ? "Applied"
-                : isApplying
-                  ? "Applying..."
-                  : "Apply"}
-            </button>
-          </div>
+              <div className="skills-row">
+                {opportunity.skills.map((skill) => (
+                  <span key={skill} className="skill-tag">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <div className="opportunity-details">
+                <p className="opportunity-description">
+                  {opportunity.description}
+                </p>
+                <p className="opportunity-deadline">
+                  Apply by {formatDeadline(opportunity.deadline)}
+                </p>
+              </div>
+
+              <button
+                className={`apply-button ${opportunity.applied ? "applied" : ""}`}
+                onClick={handleApply}
+                disabled={opportunity.applied || isApplying}
+              >
+                {opportunity.applied
+                  ? "Applied"
+                  : isApplying
+                    ? "Applying..."
+                    : "Apply"}
+              </button>
+            </div>
+          </>
         )}
 
         {!isLoading && !hasError && !opportunity && (

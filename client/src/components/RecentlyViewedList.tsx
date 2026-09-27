@@ -1,41 +1,74 @@
 import { Link } from "react-router-dom";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import {
+  clearRecentlyViewed,
+  removeRecentlyViewed,
+  selectRecentlyViewedCount,
+  selectRecentlyViewedExcluding,
+} from "../store/recentlyViewedSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
-export default function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const { recentlyViewed, clearAll } = useRecentlyViewed();
+export default function RecentlyViewedList({
+  excludeId,
+}: RecentlyViewedListProps) {
+  const dispatch = useDispatch();
 
-  // Filter out the excluded ID if provided (CHALLENGE)
-  const itemsToDisplay = excludeId
-    ? recentlyViewed.filter((item) => item.id !== excludeId)
-    : recentlyViewed;
+  const entries = useSelector((state: RootState) =>
+    selectRecentlyViewedExcluding(state, excludeId),
+  );
 
-  // Render nothing when there are no items to show (CORE)
-  if (itemsToDisplay.length === 0) {
+  const count = useSelector(selectRecentlyViewedCount);
+
+  if (entries.length === 0) {
     return null;
   }
 
+  function handleClear() {
+    dispatch(clearRecentlyViewed());
+  }
+
+  function handleRemove(e: React.MouseEvent, id: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(removeRecentlyViewed(id));
+  }
+
   return (
-    <aside className="recently-viewed-strip" style={{ marginBottom: "1.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3>Recently viewed</h3>
-        <button onClick={clearAll} className="clear-button" type="button">
-          Clear
+    <div className="recently-viewed">
+      <div className="recently-viewed-header">
+        <span className="recently-viewed-title">Recently Viewed</span>
+        <button
+          className="recently-viewed-clear"
+          onClick={handleClear}
+          type="button"
+        >
+          Clear ({count})
         </button>
       </div>
-
-      <ul style={{ display: "flex", gap: "0.75rem", listStyle: "none", padding: 0, flexWrap: "wrap" }}>
-        {itemsToDisplay.map((item) => (
-          <li key={item.id}>
-            <Link to={`/opportunities/${item.id}`} className="recently-viewed-link">
-              {item.title}
+      <div className="recently-viewed-chips">
+        {entries.map((entry) => (
+          <div key={entry.id} className="recently-viewed-chip-wrapper">
+            <Link
+              to={`/opportunities/${entry.id}`}
+              className="recently-viewed-chip"
+            >
+              <span className="chip-title">{entry.title}</span>
+              <button
+                type="button"
+                className="chip-remove-button"
+                aria-label={`Remove ${entry.title} from recently viewed`}
+                onClick={(e) => handleRemove(e, entry.id)}
+              >
+                ×
+              </button>
             </Link>
-          </li>
+          </div>
         ))}
-      </ul>
-    </aside>
+      </div>
+    </div>
   );
 }
