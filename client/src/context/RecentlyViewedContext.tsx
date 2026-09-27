@@ -1,50 +1,61 @@
-import { createContext, useContext, useState } from "react";
-import type { ReactNode } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
-interface ViewedOpportunitiesContextValue {
-  recordView: number[];
-  addToRecordView: (id: number) => number[];
-  resetRecordView: () => void;
+interface RecentlyViewedEntry {
+  id: number;
+  title: string;
 }
 
-const ViewedOpportunitiesContext =
-  createContext<ViewedOpportunitiesContextValue | null>(null);
+interface RecentlyViewedContextValue {
+  recentlyViewed: RecentlyViewedEntry[];
+  recordView: (entry: RecentlyViewedEntry) => void;
+  clearAll: () => void;
+}
 
-function ViewedOpportunitiesProvider({ children }: { children: ReactNode }) {
-  const [recordView, setRecordView] = useState<number[]>([]);
+const MAX_RECENTLY_VIEWED = 5;
 
-  function addToRecordView(id: number) {
-    const updated = recordView;
-    if (updated.includes(id)) {
-      updated.filter((item) => item != id);
-      updated.unshift(id);
-    }
-    if (updated.length === 5) {
-      updated.pop();
-      updated.unshift(id);
-    }
-    updated.unshift(id);
-    return updated;
+const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
+  null,
+);
+
+function RecentlyViewedProvider({ children }: { children: ReactNode }) {
+  const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedEntry[]>(
+    [],
+  );
+
+  function recordView(entry: RecentlyViewedEntry) {
+    const withoutEntry = recentlyViewed.filter(
+      (existing) => existing.id !== entry.id,
+    );
+
+    const updated = [entry, ...withoutEntry].slice(0, MAX_RECENTLY_VIEWED);
+
+    setRecentlyViewed(updated);
   }
-  function resetRecordView() {
-    setRecordView([]);
+
+  function clearAll() {
+    setRecentlyViewed([]);
   }
 
   return (
-    <ViewedOpportunitiesContext.Provider
-      value={{ recordView, addToRecordView, resetRecordView }}
+    <RecentlyViewedContext.Provider
+      value={{ recentlyViewed, recordView, clearAll }}
     >
       {children}
-    </ViewedOpportunitiesContext.Provider>
+    </RecentlyViewedContext.Provider>
   );
 }
 
-function useViewdRecords() {
-  const context = useContext(ViewedOpportunitiesContext);
+function useRecentlyViewed() {
+  const context = useContext(RecentlyViewedContext);
+
   if (!context) {
-    throw new Error("Error using the ViewRecord!");
+    throw new Error(
+      "useRecentlyViewed must be used inside a RecentlyViewedProvider",
+    );
   }
+
   return context;
 }
 
-export { useViewdRecords, ViewedOpportunitiesProvider };
+export { RecentlyViewedProvider, useRecentlyViewed };
+export type { RecentlyViewedEntry };
