@@ -1,5 +1,5 @@
 import { createSlice,  PayloadAction } from "@reduxjs/toolkit";
-
+import { RootState } from "./store";
 
 export interface RecentlyViewedEntry {
   id: number;
@@ -34,7 +34,22 @@ const recentlyViewedSlice = createSlice({
     },
   },
 });
+export function selectRecentlyViewed(state: RootState) {
+  return state.recentlyViewed.entries;
+}
 
+export function selectRecentlyViewedExcluding(
+  state: RootState,
+  excludeId?: number,
+) {
+  const entries = state.recentlyViewed.entries;
+
+  if (excludeId === undefined) {
+    return entries;
+  }
+
+  return entries.filter((entry) => entry.id !== excludeId);
+}
 export const { recordView, clearRecentlyViewed } = recentlyViewedSlice.actions;
 
 export default recentlyViewedSlice.reducer;

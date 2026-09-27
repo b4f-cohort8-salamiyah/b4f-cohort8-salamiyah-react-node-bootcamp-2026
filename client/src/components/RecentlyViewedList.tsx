@@ -1,7 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  clearRecentlyViewed,
+  selectRecentlyViewedExcluding,
+} from "../store/recentlyViewedSlice";
 import type { RootState } from "../store/store";
-import { clearRecentlyViewed } from "../store/recentlyViewedSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -10,11 +13,10 @@ interface RecentlyViewedListProps {
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useDispatch();
 
-  const recentlyViewed = useSelector(
-    (state: RootState) => state.recentlyViewed.entries,
-  );
+const visible = useSelector((state: RootState) =>
+  selectRecentlyViewedExcluding(state, excludeId),
+);
 
-  const visible = recentlyViewed.filter((entry) => entry.id !== excludeId);
 
   if (visible.length === 0) {
     return null;
