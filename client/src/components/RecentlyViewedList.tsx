@@ -1,12 +1,19 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import type { RootState } from "../store/store";
+import { clearRecentlyViewed } from "../store/recentlyViewedSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const { recentlyViewed, clearAll } = useRecentlyViewed();
+  const dispatch = useDispatch();
+
+  const recentlyViewed = useSelector(
+    (state: RootState) => state.recentlyViewed.entries,
+  );
+
   const visible = recentlyViewed.filter((entry) => entry.id !== excludeId);
 
   if (visible.length === 0) {
@@ -16,6 +23,7 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   return (
     <div className="recently-viewed">
       <span className="recently-viewed-label">Recently viewed:</span>
+
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
           <li key={entry.id}>
@@ -28,7 +36,12 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
           </li>
         ))}
       </ul>
-      <button className="recently-viewed-clear" onClick={clearAll}>
+
+      <button
+        type="button"
+        className="recently-viewed-clear"
+        onClick={() => dispatch(clearRecentlyViewed())}
+      >
         Clear
       </button>
     </div>
