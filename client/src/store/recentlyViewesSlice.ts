@@ -38,5 +38,14 @@ export function selectRecentleyViewed(state: RootState) {
   return state.recentlyViewed.recentleyViewed;
 }
 
+export function selectRecentlyViewedExcluding(
+  state: RootState,
+  excludeId: number,
+) {
+  return state.recentlyViewed.recentleyViewed.filter(
+    (item) => item.id !== excludeId,
+  );
+}
+
 export const { recordView, clearAllViewed } = recentlyViewedSlice.actions;
 export default recentlyViewedSlice.reducer;
