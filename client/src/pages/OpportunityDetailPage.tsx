@@ -38,6 +38,10 @@ function OpportunityDetailPage() {
       const opportunities = await fetchOpportunities();
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
+      if (match) {
+        recordView({ id: match.id, title: match.title });
+      }
+
       setOpportunity(match);
       setIsLoading(false);
     } catch (error) {
@@ -80,16 +84,13 @@ function OpportunityDetailPage() {
     load();
   }, [id]);
 
-  useEffect(() => {
-  if (opportunity) {
-    recordView(opportunity.id, opportunity.title);
-  }
-}, [opportunity]);
+ 
   return (
     
     <section className="panel opportunity-detail-page">
       
       <div className="panel-header">
+        <RecentlyViewedList excludeId={Number(id)} />
         <button className="back-button" onClick={() => navigate(-1)}>
           ← Back
         </button>
@@ -153,7 +154,6 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
-            <RecentlyViewedList id={opportunity.id} />  
           </div>
         )}
 
