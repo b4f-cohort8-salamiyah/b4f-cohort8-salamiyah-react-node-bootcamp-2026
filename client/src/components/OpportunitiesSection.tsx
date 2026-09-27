@@ -8,6 +8,7 @@ import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import RecentlyViewedList from "./RecentlyViewedList";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
@@ -134,6 +135,8 @@ function OpportunitiesSection() {
     <section className="panel opportunities-panel">
       <div className="panel-header">
         <h2 className="panel-title">Opportunities</h2>
+
+        <RecentlyViewedList />
 
         {!isLoading && !hasError && (
           <>
