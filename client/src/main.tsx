@@ -5,6 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationProvider } from "./context/NotificationContext";
 import { SavedOpportunitiesProvider } from "./context/SavedOpportunitiesContext";
+import { RecentViewedProvider } from "./context/RecentViewedContext";
 
 const rootElement = document.getElementById("root");
 
@@ -14,7 +15,9 @@ if (rootElement) {
       <BrowserRouter>
         <NotificationProvider>
           <SavedOpportunitiesProvider>
-            <App />
+            <RecentViewedProvider>
+              <App />
+            </RecentViewedProvider>
           </SavedOpportunitiesProvider>
         </NotificationProvider>
       </BrowserRouter>

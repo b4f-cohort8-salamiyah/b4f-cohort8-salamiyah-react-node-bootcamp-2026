@@ -1,8 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import { useRecentViews } from "../context/RecentViewedContext";
 
 function Navbar() {
   const { savedIds } = useSavedOpportunities();
+  const { recentViews } = useRecentViews();
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
@@ -32,6 +34,23 @@ function Navbar() {
           )}
         </NavLink>
       </nav>
+
+      {recentViews.length > 0 && (
+        <div className="recent-views-panel">
+          <span className="recent-views-label">Recently viewed</span>
+          <div className="recent-views-list">
+            {recentViews.map((opportunity) => (
+              <Link
+                key={opportunity.id}
+                to={`/opportunities/${opportunity.id}`}
+                className="recent-view-link"
+              >
+                {opportunity.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

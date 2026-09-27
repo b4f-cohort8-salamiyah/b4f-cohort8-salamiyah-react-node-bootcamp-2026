@@ -5,6 +5,7 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import { useRecentViews } from "../context/RecentViewedContext";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -23,6 +24,7 @@ function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { notify } = useNotify();
+  const { addRecentView } = useRecentViews();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -36,6 +38,9 @@ function OpportunityDetailPage() {
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
       setOpportunity(match);
+      if (match) {
+        addRecentView(match.id, match.title);
+      }
       setIsLoading(false);
     } catch (error) {
       console.log(error);
