@@ -7,12 +7,15 @@ import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
 import RecentlyViewedList from "./RecentlyViewedList";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
-  const { savedIds } = useSavedOpportunities();
+  const savedIds = useSelector(
+    (state: RootState) => state.savedOpportunities.savedIds,
+  );
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -124,7 +127,7 @@ function OpportunitiesSection() {
 
     let matchesSaved = true;
 
-    if (savedOnly && !savedIds.has(opportunity.id)) {
+    if (savedOnly && !savedIds.includes(opportunity.id)) {
       matchesSaved = false;
     }
 
