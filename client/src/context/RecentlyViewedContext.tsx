@@ -1,5 +1,4 @@
-import { createContext, useContext, useState } from "react";
-import type { ReactNode } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 interface RecentlyViewedEntry {
   id: number;
@@ -9,7 +8,10 @@ interface RecentlyViewedEntry {
 interface RecentlyViewedContextValue {
   recentlyViewed: RecentlyViewedEntry[];
   recordView: (entry: RecentlyViewedEntry) => void;
+  clearAll: () => void;
 }
+
+const MAX_RECENTLY_VIEWED = 5;
 
 const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
   null,
@@ -21,11 +23,23 @@ function RecentlyViewedProvider({ children }: { children: ReactNode }) {
   );
 
   function recordView(entry: RecentlyViewedEntry) {
-    setRecentlyViewed([...recentlyViewed, entry]);
+    const withoutEntry = recentlyViewed.filter(
+      (existing) => existing.id !== entry.id,
+    );
+
+    const updated = [entry, ...withoutEntry].slice(0, MAX_RECENTLY_VIEWED);
+
+    setRecentlyViewed(updated);
+  }
+
+  function clearAll() {
+    setRecentlyViewed([]);
   }
 
   return (
-    <RecentlyViewedContext.Provider value={{ recentlyViewed, recordView }}>
+    <RecentlyViewedContext.Provider
+      value={{ recentlyViewed, recordView, clearAll }}
+    >
       {children}
     </RecentlyViewedContext.Provider>
   );
@@ -33,11 +47,13 @@ function RecentlyViewedProvider({ children }: { children: ReactNode }) {
 
 function useRecentlyViewed() {
   const context = useContext(RecentlyViewedContext);
+
   if (!context) {
     throw new Error(
       "useRecentlyViewed must be used inside a RecentlyViewedProvider",
     );
   }
+
   return context;
 }
 

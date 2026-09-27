@@ -924,42 +924,74 @@ textarea {
   font-size: 11px;
   font-weight: 700;
 }
-/* ---------- Recently viewed ---------- */
 
 .recently-viewed {
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.recently-viewed-title {
+.recently-viewed-label {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #6b7089;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 8px;
 }
 
 .recently-viewed-list {
-  list-style: none;
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.recently-viewed-link {
+.recently-viewed-chip {
   display: inline-block;
-  background-color: #f8f9fd;
-  border: 1px solid #eceef6;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #f5f6fb;
+  border: 1px solid #e4e6f0;
   color: #4a4f6a;
   font-size: 12px;
-  font-weight: 600;
-  padding: 6px 14px;
   text-decoration: none;
 }
 
-.recently-viewed-link:hover {
-  border-color: #c9cbe8;
-  background-color: #eef0ff;
+.recently-viewed-chip:hover {
+  border-color: #4f46e5;
   color: #4f46e5;
+}
+
+.recently-viewed-clear {
+  background: none;
+  border: 1px solid #e4e6f0;
+  border-radius: 999px;
+  color: #6b7089;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 3px 10px;
+  margin-left: auto;
+}
+.recently-viewed-clear:hover {
+  border-color: #c9cbe8;
+  color: #4a4f6a;
+}
+
+.clear-saved-button {
+  align-self: flex-start;
+  border: 1px solid #d9dbee;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.clear-saved-button:hover {
+  border-color: #4f46e5;
+  background-color: #f4f4ff;
 }

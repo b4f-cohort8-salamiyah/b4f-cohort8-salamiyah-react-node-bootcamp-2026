@@ -7,9 +7,6 @@ import CommunityPage from "./pages/CommunityPage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import OpportunityDetailPage from "./pages/OpportunityDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import NotFound from "./pages/NotFound";
-
-let nextNotificationId = 1;
 
 function App() {
   return (
@@ -27,7 +24,6 @@ function App() {
           />
 
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
