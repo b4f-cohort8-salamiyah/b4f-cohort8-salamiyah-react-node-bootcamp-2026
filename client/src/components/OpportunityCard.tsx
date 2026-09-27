@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { toggleSaved } from "../store/savedOpportunitiesSlice";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
@@ -26,8 +28,11 @@ function OpportunityCard({
   onApply,
   isApplying,
 }: OpportunityCardProps) {
-  const { savedIds, toggleSaved } = useSavedOpportunities();
-  const isSaved = savedIds.has(opportunity.id);
+  const dispatch = useDispatch();
+  const savedIds = useSelector(
+    (state: RootState) => state.savedOpportunities.savedIds,
+  );
+  const isSaved = savedIds.includes(opportunity.id);
 
   return (
     <li className="opportunity-card">
@@ -39,7 +44,7 @@ function OpportunityCard({
         </div>
         <button
           className={`save-button ${isSaved ? "saved" : ""}`}
-          onClick={() => toggleSaved(opportunity.id)}
+          onClick={() => dispatch(toggleSaved(opportunity.id))}
           aria-label={isSaved ? "Remove from saved" : "Save opportunity"}
         >
           {isSaved ? "★" : "☆"}
