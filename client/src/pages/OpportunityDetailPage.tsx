@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunities } from "../api";
+import {useEffect, useState} from "react";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {useDispatch} from "react-redux"; 
+import {Opportunity} from "../types";
+import {applyToOpportunity, fetchOpportunities} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
-import { useNotify } from "../context/NotificationContext";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import {useNotify} from "../context/NotificationContext";
+import {recordView} from "../store/recentlyViewedSlice"; 
 import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
@@ -22,10 +23,10 @@ const WORK_MODE_LABELS = {
 };
 
 function OpportunityDetailPage() {
-  const { id } = useParams();
+  const {id} = useParams();
   const navigate = useNavigate();
-  const { notify } = useNotify();
-  const { recordView } = useRecentlyViewed();
+  const {notify} = useNotify();
+  const dispatch = useDispatch(); 
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -39,7 +40,7 @@ function OpportunityDetailPage() {
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
       if (match) {
-        recordView({ id: match.id, title: match.title });
+        dispatch(recordView({id: match.id, title: match.title}));
       }
 
       setOpportunity(match);
