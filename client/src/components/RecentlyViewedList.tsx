@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
-import { useRecentlyViewed } from "../context/ViewedContext";
+import { useRecentlyViewed } from "../context/RecentlyViewedContext";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const { recentViews, clearAll } = useRecentlyViewed();
-
-  const visible = recentViews.filter((entry) => entry.id !== excludeId);
+  const { recentlyViewed, clearAll } = useRecentlyViewed();
+  const visible = recentlyViewed.filter((entry) => entry.id !== excludeId);
 
   if (visible.length === 0) {
     return null;

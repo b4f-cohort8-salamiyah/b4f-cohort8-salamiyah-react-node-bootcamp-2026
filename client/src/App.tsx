@@ -1,5 +1,3 @@
-import { useState } from "react";
-import type { AppNotification, NotificationTone } from "./types";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ToastQueue from "./components/ToastQueue";
@@ -10,28 +8,7 @@ import OpportunitiesPage from "./pages/OpportunitiesPage";
 import OpportunityDetailPage from "./pages/OpportunityDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
-let nextNotificationId = 1;
-
 function App() {
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
-
-  function addNotification(message: string, tone: NotificationTone) {
-    const notification: AppNotification = {
-      id: nextNotificationId,
-      message,
-      tone,
-    };
-    nextNotificationId += 1;
-
-    setNotifications([...notifications, notification]);
-  }
-
-  function dismissFrontNotification() {
-    setNotifications(
-      notifications.filter((_notification, index) => index !== 0),
-    );
-  }
-
   return (
     <div className="page">
       <Navbar />
@@ -45,6 +22,7 @@ function App() {
             path="/opportunities/:id"
             element={<OpportunityDetailPage />}
           />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
