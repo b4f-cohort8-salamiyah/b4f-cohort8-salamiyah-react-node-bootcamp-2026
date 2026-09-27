@@ -924,68 +924,74 @@ textarea {
   font-size: 11px;
   font-weight: 700;
 }
-/* ---------- Recently viewed ---------- */
 
 .recently-viewed {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed #eceef6;
-}
-
-.recently-viewed-title {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #9198b3;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 6px;
-}
-
-.recently-viewed-links {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.recently-viewed-link {
-  display: inline-block;
-  background-color: #f0f1f9;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  color: #4a4f6a;
+.recently-viewed-label {
   font-size: 12px;
   font-weight: 600;
-  padding: 4px 12px;
+  color: #6b7089;
+}
+
+.recently-viewed-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recently-viewed-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #f5f6fb;
+  border: 1px solid #e4e6f0;
+  color: #4a4f6a;
+  font-size: 12px;
   text-decoration: none;
 }
 
-.recently-viewed-link:hover {
-  border-color: #c9cbe8;
-  color: #1e2130;
-}
-.recently-viewed-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
+.recently-viewed-chip:hover {
+  border-color: #4f46e5;
+  color: #4f46e5;
 }
 
-.recently-viewed-header .recently-viewed-title {
-  margin-bottom: 0;
-}
-
-.clear-button {
+.recently-viewed-clear {
   background: none;
-  border: none;
-  color: #9198b3;
+  border: 1px solid #e4e6f0;
+  border-radius: 999px;
+  color: #6b7089;
   cursor: pointer;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 12px;
+  padding: 3px 10px;
+  margin-left: auto;
+}
+.recently-viewed-clear:hover {
+  border-color: #c9cbe8;
+  color: #4a4f6a;
 }
 
-.clear-button:hover {
-  color: #b3392e;
-  background-color: #fde7e6;
+.clear-saved-button {
+  align-self: flex-start;
+  border: 1px solid #d9dbee;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.clear-saved-button:hover {
+  border-color: #4f46e5;
+  background-color: #f4f4ff;
 }

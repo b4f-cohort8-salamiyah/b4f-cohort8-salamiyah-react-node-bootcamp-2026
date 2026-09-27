@@ -1,7 +1,6 @@
-import { createContext, useContext, useState } from "react";
-import type { ReactNode } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
-export interface RecentlyViewedEntry {
+interface RecentlyViewedEntry {
   id: number;
   title: string;
 }
@@ -12,31 +11,25 @@ interface RecentlyViewedContextValue {
   clearAll: () => void;
 }
 
+const MAX_RECENTLY_VIEWED = 5;
+
 const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
   null,
 );
 
-interface RecentlyViewedProviderProps {
-  children: ReactNode;
-}
-
-export function RecentlyViewedProvider({
-  children,
-}: RecentlyViewedProviderProps) {
+function RecentlyViewedProvider({ children }: { children: ReactNode }) {
   const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedEntry[]>(
     [],
   );
 
   function recordView(entry: RecentlyViewedEntry) {
-    const withoutDuplicate = recentlyViewed.filter(
-      (item) => item.id !== entry.id,
+    const withoutEntry = recentlyViewed.filter(
+      (existing) => existing.id !== entry.id,
     );
 
-    const withNewFirst = [entry, ...withoutDuplicate];
+    const updated = [entry, ...withoutEntry].slice(0, MAX_RECENTLY_VIEWED);
 
-    const capped = withNewFirst.slice(0, 5);
-
-    setRecentlyViewed(capped);
+    setRecentlyViewed(updated);
   }
 
   function clearAll() {
@@ -52,14 +45,17 @@ export function RecentlyViewedProvider({
   );
 }
 
-export function useRecentlyViewed() {
+function useRecentlyViewed() {
   const context = useContext(RecentlyViewedContext);
 
   if (!context) {
     throw new Error(
-      "useRecentlyViewed must be used inside RecentlyViewedProvider",
+      "useRecentlyViewed must be used inside a RecentlyViewedProvider",
     );
   }
 
   return context;
 }
+
+export { RecentlyViewedProvider, useRecentlyViewed };
+export type { RecentlyViewedEntry };
