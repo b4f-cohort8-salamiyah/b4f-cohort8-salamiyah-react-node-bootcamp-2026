@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import savedOpportunitiesReducer from "./savedOpportunitiesSlice";
+import recentlyViewedReducer from "./recentlyViewedSlice";
 
 const store = configureStore({
   reducer: {
     savedOpportunities: savedOpportunitiesReducer,
+    recentlyViewed: recentlyViewedReducer, 
   },
 });
 

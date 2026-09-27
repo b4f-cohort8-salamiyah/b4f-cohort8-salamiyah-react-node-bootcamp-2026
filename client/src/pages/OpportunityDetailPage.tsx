@@ -5,8 +5,10 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+
 import RecentlyViewedList from "../components/RecentlyViewedList";
+import { useDispatch } from "react-redux";
+import { recordView } from "../store/recentlyViewedSlice";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -29,7 +31,7 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
-  const { recordView } = useRecentlyViewed();
+ const dispatch = useDispatch();
 
   async function load() {
     setIsLoading(true);
@@ -39,8 +41,8 @@ function OpportunityDetailPage() {
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
 
       if (match) {
-        recordView({ id: match.id, title: match.title });
-      }
+  dispatch(recordView({ id: match.id, title: match.title }));
+   }
 
       setOpportunity(match);
       setIsLoading(false);
