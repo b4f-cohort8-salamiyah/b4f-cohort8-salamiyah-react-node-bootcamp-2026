@@ -1,10 +1,11 @@
-import { NavLink, Link } from "react-router-dom";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
-import { useRecentViews } from "../context/RecentViewedContext";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 function Navbar() {
-  const { savedIds } = useSavedOpportunities();
-  const { recentViews } = useRecentViews();
+  const savedIds = useSelector(
+    (state: RootState) => state.savedOpportunities.savedIds,
+  );
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
@@ -29,28 +30,11 @@ function Navbar() {
         </NavLink>
         <NavLink to="/opportunities" className={navLinkClassName}>
           Opportunities
-          {savedIds.size > 0 && (
-            <span className="saved-count-badge">{savedIds.size}</span>
+          {savedIds.length > 0 && (
+            <span className="saved-count-badge">{savedIds.length}</span>
           )}
         </NavLink>
       </nav>
-
-      {recentViews.length > 0 && (
-        <div className="recent-views-panel">
-          <span className="recent-views-label">Recently viewed</span>
-          <div className="recent-views-list">
-            {recentViews.map((opportunity) => (
-              <Link
-                key={opportunity.id}
-                to={`/opportunities/${opportunity.id}`}
-                className="recent-view-link"
-              >
-                {opportunity.title}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
