@@ -5,7 +5,8 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import { useDispatch } from "react-redux";
+import { recordView } from "../store/recentlyViewedSlice";
 import RecentlyViewedList from "../components/RecentlyViewedList";
 
 const TYPE_LABELS = {
@@ -25,7 +26,7 @@ function OpportunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { notify } = useNotify();
-  const { recordView } = useRecentlyViewed();
+  const dispatch = useDispatch();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -74,9 +75,17 @@ function OpportunityDetailPage() {
         // Ignore requests from a previous route or StrictMode's cleanup.
         if (cancelled) return;
 
-        const match = opportunities.find((entry) => String(entry.id) === id) ?? null;
+        const match =
+          opportunities.find((entry) => String(entry.id) === id) ?? null;
         setOpportunity(match);
-        if (match) recordView({ id: match.id, title: match.title });
+        if (match) {
+          dispatch(
+            recordView({
+              id: match.id,
+              title: match.title,
+            }),
+          );
+        }
       } catch {
         if (!cancelled) setHasError(true);
       } finally {
@@ -85,18 +94,20 @@ function OpportunityDetailPage() {
     }
 
     load();
-    return () => { cancelled = true; };
-  }, [id, retryCount, recordView]);
+    return () => {
+      cancelled = true;
+    };
+  }, [id, retryCount, dispatch]);
 
   return (
     <section className="panel opportunity-detail-page">
       <div className="panel-header">
+        <RecentlyViewedList excludeId={Number(id)} />
         <button className="back-button" onClick={() => navigate(-1)}>
           ← Back
         </button>
       </div>
       <div className="panel-scroll">
-        <RecentlyViewedList excludeId={Number(id)} />
         {!isLoading && hasError && (
           <ErrorMessage
             message="We could not load this opportunity."

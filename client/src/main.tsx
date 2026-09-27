@@ -4,8 +4,8 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationProvider } from "./context/NotificationContext";
-import { SavedOpportunitiesProvider } from "./context/SavedOpportunitiesContext";
-import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const rootElement = document.getElementById("root");
 
@@ -13,13 +13,11 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <BrowserRouter>
-        <NotificationProvider>
-          <SavedOpportunitiesProvider>
-            <RecentlyViewedProvider>
-              <App />
-            </RecentlyViewedProvider>
-          </SavedOpportunitiesProvider>
-        </NotificationProvider>
+        <Provider store={store}>
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
+        </Provider>
       </BrowserRouter>
     </StrictMode>,
   );
