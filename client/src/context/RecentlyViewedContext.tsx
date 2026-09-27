@@ -1,41 +1,51 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { RecentlyViewedEntry } from "../types";
+import { createContext, ReactNode, useContext, useState } from "react";
 
+interface RecentlyViewedEntry {
+  id: number;
+  title: string;
+}
 
 interface RecentlyViewedContextValue {
-  entries: RecentlyViewedEntry[];
+  recentlyViewed: RecentlyViewedEntry[];
   recordView: (entry: RecentlyViewedEntry) => void;
   clearAll: () => void;
 }
+
+const MAX_RECENTLY_VIEWED = 5;
 
 const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
   null,
 );
 
- function RecentlyViewedProvider({ children }: { children: ReactNode }) {
-  const [entries, setEntries] = useState<RecentlyViewedEntry[]>([]);
+function RecentlyViewedProvider({ children }: { children: ReactNode }) {
+  const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedEntry[]>(
+    [],
+  );
 
-   function recordView(entry: RecentlyViewedEntry) {
-     setEntries((currentEntries) =>
-       [entry, ...currentEntries.filter((item) => item.id !== entry.id)].slice(
-         0,
-         5,
-       ),
-     );
-   }
-   function clearAll() {
-     setEntries([]);
-   }
+  function recordView(entry: RecentlyViewedEntry) {
+    const withoutEntry = recentlyViewed.filter(
+      (existing) => existing.id !== entry.id,
+    );
 
+    const updated = [entry, ...withoutEntry].slice(0, MAX_RECENTLY_VIEWED);
+
+    setRecentlyViewed(updated);
+  }
+
+  function clearAll() {
+    setRecentlyViewed([]);
+  }
 
   return (
-    <RecentlyViewedContext.Provider value={{ entries, recordView, clearAll }}>
+    <RecentlyViewedContext.Provider
+      value={{ recentlyViewed, recordView, clearAll }}
+    >
       {children}
     </RecentlyViewedContext.Provider>
   );
 }
 
- function useRecentlyViewed() {
+function useRecentlyViewed() {
   const context = useContext(RecentlyViewedContext);
 
   if (!context) {
@@ -46,4 +56,6 @@ const RecentlyViewedContext = createContext<RecentlyViewedContextValue | null>(
 
   return context;
 }
-export { useRecentlyViewed, RecentlyViewedProvider };
+
+export { RecentlyViewedProvider, useRecentlyViewed };
+export type { RecentlyViewedEntry };

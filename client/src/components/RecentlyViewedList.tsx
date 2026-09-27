@@ -6,43 +6,32 @@ interface RecentlyViewedListProps {
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const { entries, clearAll } = useRecentlyViewed();
+  const { recentlyViewed, clearAll } = useRecentlyViewed();
+  const visible = recentlyViewed.filter((entry) => entry.id !== excludeId);
 
-  const visibleEntries =
-    excludeId === undefined
-      ? entries
-      : entries.filter((entry) => entry.id !== excludeId);
-
-  if (visibleEntries.length === 0) {
+  if (visible.length === 0) {
     return null;
   }
 
   return (
-    <section className="recently-viewed">
-      <div className="recently-viewed-header">
-        <h2 className="recently-viewed-title">Recently viewed</h2>
-
-        <button
-          type="button"
-          className="recently-viewed-clear"
-          onClick={clearAll}
-        >
-          Clear
-        </button>
-      </div>
-
-      <div className="recently-viewed-list">
-        {visibleEntries.map((entry) => (
-          <Link
-            key={entry.id}
-            to={`/opportunities/${entry.id}`}
-            className="recently-viewed-link"
-          >
-            {entry.title}
-          </Link>
+    <div className="recently-viewed">
+      <span className="recently-viewed-label">Recently viewed:</span>
+      <ul className="recently-viewed-list">
+        {visible.map((entry) => (
+          <li key={entry.id}>
+            <Link
+              to={`/opportunities/${entry.id}`}
+              className="recently-viewed-chip"
+            >
+              {entry.title}
+            </Link>
+          </li>
         ))}
-      </div>
-    </section>
+      </ul>
+      <button className="recently-viewed-clear" onClick={clearAll}>
+        Clear
+      </button>
+    </div>
   );
 }
 
