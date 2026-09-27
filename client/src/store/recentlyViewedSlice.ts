@@ -32,6 +32,11 @@ const recentlyViewedSlice = createSlice({
     clearRecentlyViewed(state) {
       state.entries = [];
     },
+    removeRecentlyViewed(state, action: PayloadAction<number>) {
+      const id = action.payload;
+
+      state.entries = state.entries.filter((entry) => entry.id !== id);
+    },
   },
 });
 export function selectRecentlyViewed(state: RootState) {
@@ -50,6 +55,11 @@ export function selectRecentlyViewedExcluding(
 
   return entries.filter((entry) => entry.id !== excludeId);
 }
-export const { recordView, clearRecentlyViewed } = recentlyViewedSlice.actions;
+export function selectRecentlyViewedCount(state: RootState) {
+  return state.recentlyViewed.entries.length;
+}
+
+export const { recordView, clearRecentlyViewed, removeRecentlyViewed } =
+  recentlyViewedSlice.actions;
 
 export default recentlyViewedSlice.reducer;

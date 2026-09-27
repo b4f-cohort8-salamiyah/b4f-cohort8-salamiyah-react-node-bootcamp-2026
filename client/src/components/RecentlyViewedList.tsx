@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import type { RootState } from "../store/store";
 import {
   clearRecentlyViewed,
+  removeRecentlyViewed,
+  selectRecentlyViewedCount,
   selectRecentlyViewedExcluding,
 } from "../store/recentlyViewedSlice";
-import type { RootState } from "../store/store";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -13,10 +15,11 @@ interface RecentlyViewedListProps {
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useDispatch();
 
-const visible = useSelector((state: RootState) =>
-  selectRecentlyViewedExcluding(state, excludeId),
-);
+  const visible = useSelector((state: RootState) =>
+    selectRecentlyViewedExcluding(state, excludeId),
+  );
 
+  const count = useSelector(selectRecentlyViewedCount);
 
   if (visible.length === 0) {
     return null;
@@ -28,13 +31,28 @@ const visible = useSelector((state: RootState) =>
 
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
-          <li key={entry.id}>
-            <Link
-              to={`/opportunities/${entry.id}`}
-              className="recently-viewed-chip"
-            >
-              {entry.title}
-            </Link>
+          <li key={entry.id} className="recently-viewed-item">
+            <div className="recently-viewed-chip">
+              <Link
+                to={`/opportunities/${entry.id}`}
+                className="recently-viewed-link"
+              >
+                {entry.title}
+              </Link>
+
+              <button
+                type="button"
+                className="recently-viewed-remove"
+                aria-label={`Remove ${entry.title} from recently viewed`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  dispatch(removeRecentlyViewed(entry.id));
+                }}
+              >
+                ×
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -44,7 +62,7 @@ const visible = useSelector((state: RootState) =>
         className="recently-viewed-clear"
         onClick={() => dispatch(clearRecentlyViewed())}
       >
-        Clear
+        Clear ({count})
       </button>
     </div>
   );
