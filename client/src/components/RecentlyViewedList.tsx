@@ -1,25 +1,23 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../store/store";
 import {
   clearRecentlyViewed,
   removeRecentlyViewed,
   selectRecentlyViewedCount,
   selectRecentlyViewedExcluding,
 } from "../store/recentlyViewedSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const count = useAppSelector(selectRecentlyViewedCount);
 
-  const visible = useSelector((state: RootState) =>
-    selectRecentlyViewedExcluding(state, excludeId)
+  const visible = useAppSelector((state) =>
+    selectRecentlyViewedExcluding(state, excludeId),
   );
-
-  const count = useSelector(selectRecentlyViewedCount);
 
   if (visible.length === 0) {
     return null;
@@ -40,11 +38,7 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
             <button
               className="recently-viewed-remove"
               aria-label={`Remove ${entry.title} from recently viewed`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dispatch(removeRecentlyViewed(entry.id));
-              }}
+              onClick={() => dispatch(removeRecentlyViewed(entry.id))}
             >
               ×
             </button>

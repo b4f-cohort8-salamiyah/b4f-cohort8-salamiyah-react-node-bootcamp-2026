@@ -996,105 +996,43 @@ textarea {
   background-color: #f4f4ff;
 }
 
-.recently-viewed {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 8px 12px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #555;
-}
-.recently-viewed-label {
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-}
-
-
-.recently-viewed-list {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  flex-wrap: wrap;
-}
-
-
 .recently-viewed-item {
-  display: inline-flex;   
-  align-items: center;    
-  gap: 2px;               
-}
-
-
-.recently-viewed-chip {
-  display: inline-block;
-  padding: 4px 10px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  color: #333;
-  text-decoration: none;
-  font-size: 12px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.recently-viewed-chip:hover {
-  background-color: #eef2ff;
-  border-color: #a5b4fc;
-}
-
-
-.recently-viewed-remove {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  background: none;
+  gap: 2px;
+}
+.recently-viewed-remove {
   border: none;
-  border-radius: 50%;
-  color: #888;
+  background: none;
+  color: #6b7089;
   font-size: 14px;
   line-height: 1;
+  padding: 0 2px;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
 }
-
 .recently-viewed-remove:hover {
-  background-color: #fee2e2;
-  color: #dc2626;
+  color: #d14343;
 }
 
-.recently-viewed-remove:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 1px;
-}
-
-
-.recently-viewed-clear {
-  margin-left: auto;       
-  padding: 4px 10px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  color: #555;
+.activity-summary {
   font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-weight: 600;
+  color: #6b7089;
+  margin: 0;
 }
 
-.recently-viewed-clear:hover {
-  background-color: #f3f4f6;
-  border-color: #bbb;
+.reset-activity-button {
+  align-self: flex-start;
+  border: 1px solid #f0c9c9;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #b3413f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.reset-activity-button:hover {
+  border-color: #b3413f;
+  background-color: #fff4f4;
 }
