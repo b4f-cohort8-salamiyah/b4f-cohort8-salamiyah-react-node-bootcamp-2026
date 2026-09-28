@@ -978,3 +978,45 @@ textarea {
   border-color: #c9cbe8;
   color: #4a4f6a;
 }
+
+.clear-saved-button {
+  align-self: flex-start;
+  border: 1px solid #d9dbee;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.clear-saved-button:hover {
+  border-color: #4f46e5;
+  background-color: #f4f4ff;
+}
+
+.recently-viewed-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.recently-viewed-remove {
+  border: none;
+  background: none;
+  color: #6b7089;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+}
+.recently-viewed-remove:hover {
+  color: #d14343;
+}
+
+.activity-summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7089;
+  margin: 0;
+}
