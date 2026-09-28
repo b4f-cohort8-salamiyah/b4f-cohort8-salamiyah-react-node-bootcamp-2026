@@ -6,6 +6,7 @@ import {
   selectRecentlyViewedExcluding,
 } from "../store/recentlyViewedSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { selectRecentlyViewedNotSaved } from "../store/selectors";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -14,6 +15,7 @@ interface RecentlyViewedListProps {
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useAppDispatch();
   const count = useAppSelector(selectRecentlyViewedCount);
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
 
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
@@ -26,6 +28,11 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   return (
     <div className="recently-viewed">
       <span className="recently-viewed-label">Recently viewed:</span>
+      {notSaved.length > 0 && (
+        <p className="recently-viewed-unsaved-note">
+          {notSaved.length} of these aren't saved yet.
+        </p>
+      )}
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
           <li key={entry.id}>

@@ -24,6 +24,8 @@ function OpportunitiesSection() {
   const dispatch = useAppDispatch();
   const savedIds = useAppSelector(selectSavedIds);
 
+  // const savedCount = useAppSelector(selectSavedCount);
+  // const viewedCount = useAppSelector(selectRecentlyViewedCount);
   const totalActivity = useAppSelector(selectTotalActivityCount);
   const hasActivity = useAppSelector(selectHasAnyActivity);
 
