@@ -1,12 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
+export const SAVED_OPPORTUNITY_IDS_KEY = "savedOpportunityIds";
+
+function loadSavedIds(): number[] {
+  const saved = localStorage.getItem(SAVED_OPPORTUNITY_IDS_KEY);
+  if (!saved) {
+    return [];
+  }
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+}
 interface SavedOpportunitiesState {
   savedIds: number[];
 }
 
 const initialState: SavedOpportunitiesState = {
-  savedIds: [],
+  savedIds: loadSavedIds(),
 };
 
 const savedOpportunitiesSlice = createSlice({
