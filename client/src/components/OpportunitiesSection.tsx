@@ -1,31 +1,30 @@
-import { useEffect, useState } from "react";
-import type { Opportunity, OpportunityType, WorkMode } from "../types";
-import { applyToOpportunity, fetchOpportunities } from "../api";
+import {useEffect, useState} from "react";
+import type {Opportunity, OpportunityType, WorkMode} from "../types";
+import {applyToOpportunity, fetchOpportunities} from "../api";
 import OpportunityFilters from "./OpportunityFilters";
 import OpportunityList from "./OpportunityList";
 import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
-import { useNotify } from "../context/NotificationContext";
+import {useNotify} from "../context/NotificationContext";
 import RecentlyViewedList from "./RecentlyViewedList";
-import {
-  clearAllSaved,
-  selectSavedIds,
-} from "../store/savedOpportunitiesSlice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import {clearAllSaved, selectSavedIds, toggleSaved} from "../store/savedOpportunitiesSlice";
+import {useAppDispatch, useAppSelector} from "../store/hooks";
 import {
   selectHasAnyActivity,
   selectTotalActivityCount,
 } from "../store/selectors";
-import { clearRecentlyViewed } from "../store/recentlyViewedSlice";
+import {clearRecentlyViewed} from "../store/recentlyViewedSlice";
+import {selectRecentlyViewedNotSaved} from "../store/selectors";
 
 function OpportunitiesSection() {
-  const { notify } = useNotify();
+  const {notify} = useNotify();
   const dispatch = useAppDispatch();
   const savedIds = useAppSelector(selectSavedIds);
 
   const totalActivity = useAppSelector(selectTotalActivityCount);
   const hasActivity = useAppSelector(selectHasAnyActivity);
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
 
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,6 +88,10 @@ function OpportunitiesSection() {
     } finally {
       setApplyingId(null);
     }
+  }
+
+  function handleSaveAll() {
+    notSaved.forEach((entry) => dispatch(toggleSaved(entry.id)));
   }
 
   // Hash Table — a plain key-value object, opportunities keyed by id,
@@ -165,6 +168,13 @@ function OpportunitiesSection() {
         )}
 
         <RecentlyViewedList />
+
+        {notSaved.length > 0 && (
+          <div>
+            <p>{notSaved.length} of these aren't saved yet.</p>
+            <button onClick={handleSaveAll}>Save all</button>
+          </div>
+        )}
 
         {savedIds.length > 0 && (
           <button

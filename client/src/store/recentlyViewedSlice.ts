@@ -12,11 +12,23 @@ interface RecentlyViewedState {
 }
 
 const MAX_RECENTLY_VIEWED = 5;
+export const RECENTLY_VIEWED_ENTRIES_KEY = "recentlyViewedEntries";
+
+function loadRecentlyViewed(): RecentlyViewedEntry[] {
+  const saved = localStorage.getItem(RECENTLY_VIEWED_ENTRIES_KEY);
+  if (!saved) {
+    return [];
+  }
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+}
 
 const initialState: RecentlyViewedState = {
-  entries: [],
+  entries: loadRecentlyViewed(),
 };
-
 const recentlyViewedSlice = createSlice({
   name: "recentlyViewed",
   initialState,
