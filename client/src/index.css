@@ -1020,3 +1020,19 @@ textarea {
   color: #6b7089;
   margin: 0;
 }
+
+.reset-activity-button {
+  align-self: flex-start;
+  border: 1px solid #f0c9c9;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #b3413f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.reset-activity-button:hover {
+  border-color: #b3413f;
+  background-color: #fff4f4;
+}
