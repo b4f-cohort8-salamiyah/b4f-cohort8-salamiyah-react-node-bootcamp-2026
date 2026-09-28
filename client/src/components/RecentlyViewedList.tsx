@@ -1,17 +1,24 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRecentlyViewedExcluding } from "../store/recentlyViewesSlice";
+import {
+  removeRecentlyViewed,
+  selectRecentlyViewedCount,
+  selectRecentlyViewedExcluding,
+} from "../store/recentlyViewesSlice";
 import { clearAllViewed } from "../store/recentlyViewesSlice";
 import { RootState } from "../store/store";
 
 interface RecentlyViewedListProps {
-  excludeId: number;
+  excludeId?: number;
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useDispatch();
   const visible = useSelector((state: RootState) =>
     selectRecentlyViewedExcluding(state, excludeId),
+  );
+  const count = useSelector((state: RootState) =>
+    selectRecentlyViewedCount(state),
   );
 
   if (visible.length === 0) {
@@ -29,6 +36,12 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
               className="recently-viewed-chip"
             >
               {entry.title}
+              <button
+                className="recently-viewed-remove"
+                onClick={() => dispatch(removeRecentlyViewed(entry.id))}
+              >
+                x
+              </button>
             </Link>
           </li>
         ))}
@@ -37,7 +50,7 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
         className="recently-viewed-clear"
         onClick={() => dispatch(clearAllViewed())}
       >
-        Clear
+        Clear {count}
       </button>
     </div>
   );

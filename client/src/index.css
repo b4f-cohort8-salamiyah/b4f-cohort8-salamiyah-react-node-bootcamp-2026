@@ -995,3 +995,9 @@ textarea {
   border-color: #4f46e5;
   background-color: #f4f4ff;
 }
+
+.recently-viewed-remove {
+  background-color: none;
+  border: none;
+  margin-left: 5px;
+}
