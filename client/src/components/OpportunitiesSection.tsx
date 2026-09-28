@@ -11,11 +11,13 @@ import RecentlyViewedList from "./RecentlyViewedList";
 import {
   clearAllSaved,
   selectSavedIds,
+  toggleSaved,
 } from "../store/savedOpportunitiesSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   selectHasAnyActivity,
   selectTotalActivityCount,
+  selectRecentlyViewedNotSaved,
 } from "../store/selectors";
 import { clearRecentlyViewed } from "../store/recentlyViewedSlice";
 
@@ -23,6 +25,7 @@ function OpportunitiesSection() {
   const { notify } = useNotify();
   const dispatch = useAppDispatch();
   const savedIds = useAppSelector(selectSavedIds);
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
 
   const totalActivity = useAppSelector(selectTotalActivityCount);
   const hasActivity = useAppSelector(selectHasAnyActivity);
@@ -158,19 +161,27 @@ function OpportunitiesSection() {
             onClick={() => {
               dispatch(clearAllSaved());
               dispatch(clearRecentlyViewed());
-            }}
-          >
+            }}>
             Reset activity
           </button>
         )}
 
         <RecentlyViewedList />
 
+        {
+        notSaved.length > 0 && (
+        <div>
+          <p>{notSaved.length} opportuinities not saved yet</p>
+          <button onClick={()=>{ notSaved.map((opp)=>{
+            dispatch(toggleSaved(opp.id));
+          })  }} >Save All</button>
+        </div>
+        )}
+
         {savedIds.length > 0 && (
           <button
             className="clear-saved-button"
-            onClick={() => dispatch(clearAllSaved())}
-          >
+            onClick={() => dispatch(clearAllSaved())}>
             Clear saved ({savedIds.length})
           </button>
         )}
