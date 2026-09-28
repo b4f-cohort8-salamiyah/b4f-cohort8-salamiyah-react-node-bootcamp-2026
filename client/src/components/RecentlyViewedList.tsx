@@ -7,6 +7,7 @@ import {
 } from "../store/recentlyViewedSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectRecentlyViewedNotSaved } from "../store/selectors";
+import { toggleSaved } from "../store/savedOpportunitiesSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -16,6 +17,11 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useAppDispatch();
   const count = useAppSelector(selectRecentlyViewedCount);
   const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
+  const handleSaveAll = () => {
+    notSaved.forEach((entry) => {
+      dispatch(toggleSaved(entry.id));
+    });
+  };
 
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
@@ -29,9 +35,11 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
     <div className="recently-viewed">
       <span className="recently-viewed-label">Recently viewed:</span>
       {notSaved.length > 0 && (
-        <p className="recently-viewed-unsaved-note">
-          {notSaved.length} of these aren't saved yet.
-        </p>
+        <div className="recently-viewed-unsaved-note">
+          <span>{notSaved.length} of these aren't saved yet.</span>
+
+          <button onClick={handleSaveAll}>Save all</button>
+        </div>
       )}
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
