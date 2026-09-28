@@ -40,6 +40,13 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
                 x
               </button>
             </Link>
+            <button
+              className="recently-viewed-remove"
+              aria-label={`Remove ${entry.title} from recently viewed`}
+              onClick={() => dispatch(removeRecentlyViewed(entry.id))}
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>
