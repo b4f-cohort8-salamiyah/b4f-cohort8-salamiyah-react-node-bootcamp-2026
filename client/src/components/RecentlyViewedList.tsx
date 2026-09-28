@@ -1,13 +1,23 @@
 import { Link } from "react-router-dom";
-import { useRecentlyViewed } from "../context/RecentlyViewedContext";
+import {
+  clearRecentlyViewed,
+  removeRecentlyViewed,
+  selectRecentlyViewedCount,
+  selectRecentlyViewedExcluding,
+} from "../store/recentlyViewedSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
-  const { recentlyViewed, clearAll } = useRecentlyViewed();
-  const visible = recentlyViewed.filter((entry) => entry.id !== excludeId);
+  const dispatch = useAppDispatch();
+  const count = useAppSelector(selectRecentlyViewedCount);
+
+  const visible = useAppSelector((state) =>
+    selectRecentlyViewedExcluding(state, excludeId),
+  );
 
   if (visible.length === 0) {
     return null;
@@ -25,11 +35,21 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
             >
               {entry.title}
             </Link>
+            <button
+              className="recently-viewed-remove"
+              aria-label={`Remove ${entry.title} from recently viewed`}
+              onClick={() => dispatch(removeRecentlyViewed(entry.id))}
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>
-      <button className="recently-viewed-clear" onClick={clearAll}>
-        Clear
+      <button
+        className="recently-viewed-clear"
+        onClick={() => dispatch(clearRecentlyViewed())}
+      >
+        Clear ({count})
       </button>
     </div>
   );
