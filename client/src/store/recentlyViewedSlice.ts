@@ -1,14 +1,17 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "./store";
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
-export interface ViewedItem {
+interface RecentlyViewedEntry {
   id: number;
   title: string;
 }
 
 interface RecentlyViewedState {
-  entries: ViewedItem[];
+  entries: RecentlyViewedEntry[];
 }
+
+const MAX_RECENTLY_VIEWED = 5;
 
 const initialState: RecentlyViewedState = {
   entries: [],
@@ -18,40 +21,40 @@ const recentlyViewedSlice = createSlice({
   name: "recentlyViewed",
   initialState,
   reducers: {
-    recordView(state, action: PayloadAction<ViewedItem>) {
-      const newItem = action.payload;
-      const filtered = state.entries.filter((item) => item.id !== newItem.id);
-      state.entries = [newItem, ...filtered].slice(0, 5);
+    recordView(state, action: PayloadAction<RecentlyViewedEntry>) {
+      const entry = action.payload;
+      const withoutEntry = state.entries.filter(
+        (existing) => existing.id !== entry.id,
+      );
+
+      state.entries = [entry, ...withoutEntry].slice(0, MAX_RECENTLY_VIEWED);
+    },
+    removeRecentlyViewed(state, action: PayloadAction<number>) {
+      state.entries = state.entries.filter(
+        (entry) => entry.id !== action.payload,
+      );
     },
     clearRecentlyViewed(state) {
       state.entries = [];
     },
-    removeRecentlyViewed(state, action: PayloadAction<number>) {
-      state.entries = state.entries.filter(
-        (item) => item.id !== action.payload,
-      );
-    },
   },
 });
-
-export const {recordView, clearRecentlyViewed, removeRecentlyViewed} =
-  recentlyViewedSlice.actions;
 
 export function selectRecentlyViewed(state: RootState) {
   return state.recentlyViewed.entries;
 }
-
 export function selectRecentlyViewedExcluding(
   state: RootState,
   excludeId?: number,
 ) {
-  const entries = selectRecentlyViewed(state);
-  if (excludeId === undefined) return entries;
-  return entries.filter((item) => item.id !== excludeId);
+  return state.recentlyViewed.entries.filter((entry) => entry.id !== excludeId);
 }
-
 export function selectRecentlyViewedCount(state: RootState) {
   return state.recentlyViewed.entries.length;
 }
 
+export const { recordView, removeRecentlyViewed, clearRecentlyViewed } =
+  recentlyViewedSlice.actions;
+
 export default recentlyViewedSlice.reducer;
+export type { RecentlyViewedEntry };

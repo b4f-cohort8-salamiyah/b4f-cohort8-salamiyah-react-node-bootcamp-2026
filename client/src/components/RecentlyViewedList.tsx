@@ -1,24 +1,23 @@
-import {Link} from "react-router-dom";
-import {useSelector, useDispatch} from "react-redux";
-import {RootState} from "../store/store";
+import { Link } from "react-router-dom";
 import {
-  selectRecentlyViewedExcluding,
-  selectRecentlyViewedCount,
   clearRecentlyViewed,
   removeRecentlyViewed,
+  selectRecentlyViewedCount,
+  selectRecentlyViewedExcluding,
 } from "../store/recentlyViewedSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
-function RecentlyViewedList({excludeId}: RecentlyViewedListProps) {
-  const dispatch = useDispatch();
+function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
+  const dispatch = useAppDispatch();
+  const count = useAppSelector(selectRecentlyViewedCount);
 
-  const visible = useSelector((state: RootState) =>
+  const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
   );
-  const count = useSelector(selectRecentlyViewedCount);
 
   if (visible.length === 0) {
     return null;
@@ -29,7 +28,7 @@ function RecentlyViewedList({excludeId}: RecentlyViewedListProps) {
       <span className="recently-viewed-label">Recently viewed:</span>
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
-          <li key={entry.id} className="recently-viewed-item-wrapper">
+          <li key={entry.id}>
             <Link
               to={`/opportunities/${entry.id}`}
               className="recently-viewed-chip"
@@ -37,14 +36,9 @@ function RecentlyViewedList({excludeId}: RecentlyViewedListProps) {
               {entry.title}
             </Link>
             <button
-              type="button"
               className="recently-viewed-remove"
-              aria-label={`Remove ${entry.title}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dispatch(removeRecentlyViewed(entry.id));
-              }}
+              aria-label={`Remove ${entry.title} from recently viewed`}
+              onClick={() => dispatch(removeRecentlyViewed(entry.id))}
             >
               ×
             </button>

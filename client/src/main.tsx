@@ -15,7 +15,7 @@ if (rootElement) {
       <BrowserRouter>
         <Provider store={store}>
           <NotificationProvider>
-              <App />
+            <App />
           </NotificationProvider>
         </Provider>
       </BrowserRouter>

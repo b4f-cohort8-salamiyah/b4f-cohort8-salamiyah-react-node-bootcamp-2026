@@ -995,3 +995,28 @@ textarea {
   border-color: #4f46e5;
   background-color: #f4f4ff;
 }
+
+.recently-viewed-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.recently-viewed-remove {
+  border: none;
+  background: none;
+  color: #6b7089;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+}
+.recently-viewed-remove:hover {
+  color: #d14343;
+}
+
+.activity-summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7089;
+  margin: 0;
+}

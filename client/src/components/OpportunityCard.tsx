@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../store/store";
 import { selectIsSaved, toggleSaved } from "../store/savedOpportunitiesSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
@@ -28,9 +27,9 @@ function OpportunityCard({
   onApply,
   isApplying,
 }: OpportunityCardProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const isSaved = useSelector((state: RootState) =>
+  const isSaved = useAppSelector((state) =>
     selectIsSaved(state, opportunity.id),
   );
 
