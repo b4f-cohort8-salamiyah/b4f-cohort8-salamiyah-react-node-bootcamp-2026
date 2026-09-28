@@ -6,8 +6,8 @@ import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
 import RecentlyViewedList from "../components/RecentlyViewedList";
-import { useDispatch } from "react-redux";
 import { recordView } from "../store/recentlyViewedSlice";
+import { useAppDispatch } from "../store/hooks";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -24,7 +24,7 @@ const WORK_MODE_LABELS = {
 
 function OpportunityDetailPage() {
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { notify } = useNotify();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);

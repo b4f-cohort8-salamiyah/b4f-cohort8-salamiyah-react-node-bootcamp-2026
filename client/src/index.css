@@ -1013,3 +1013,10 @@ textarea {
 .recently-viewed-remove:hover {
   color: #d14343;
 }
+
+.activity-summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7089;
+  margin: 0;
+}
