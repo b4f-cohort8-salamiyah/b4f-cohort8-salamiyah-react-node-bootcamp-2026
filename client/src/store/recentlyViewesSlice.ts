@@ -47,12 +47,6 @@ export function selectRecentlyViewedExcluding(
   return state.recentlyViewed.entries.filter((item) => item.id !== excludeId);
 }
 
-// export function removeRecentlyViewed(state: RootState, id: number) {
-//   state.recentlyViewed.entries = state.recentlyViewed.entries.filter(
-//     (item) => item.id !== id,
-//   );
-// }
-
 export function selectRecentlyViewedCount(state: RootState) {
   return state.recentlyViewed.entries.length;
 }
