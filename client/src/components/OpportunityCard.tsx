@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import { selectIsSaved, toggleSaved } from "../store/savedOpportunitiesSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
@@ -26,8 +27,11 @@ function OpportunityCard({
   onApply,
   isApplying,
 }: OpportunityCardProps) {
-  const { savedIds, toggleSaved } = useSavedOpportunities();
-  const isSaved = savedIds.has(opportunity.id);
+  const dispatch = useAppDispatch();
+
+  const isSaved = useAppSelector((state) =>
+    selectIsSaved(state, opportunity.id),
+  );
 
   return (
     <li className="opportunity-card">
@@ -39,7 +43,7 @@ function OpportunityCard({
         </div>
         <button
           className={`save-button ${isSaved ? "saved" : ""}`}
-          onClick={() => toggleSaved(opportunity.id)}
+          onClick={() => dispatch(toggleSaved(opportunity.id))}
           aria-label={isSaved ? "Remove from saved" : "Save opportunity"}
         >
           {isSaved ? "★" : "☆"}

@@ -7,11 +7,21 @@ import LoadingMessage from "./LoadingMessage";
 import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
-import { useSavedOpportunities } from "../context/SavedOpportunitiesContext";
+import RecentlyViewedList from "./RecentlyViewedList";
+import {
+  clearAllSaved,
+  selectSavedIds,
+} from "../store/savedOpportunitiesSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { selectTotalActivityCount } from "../store/selectors";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
-  const { savedIds } = useSavedOpportunities();
+  const dispatch = useAppDispatch();
+  const savedIds = useAppSelector(selectSavedIds);
+
+  const totalActivity = useAppSelector(selectTotalActivityCount);
+
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -123,7 +133,7 @@ function OpportunitiesSection() {
 
     let matchesSaved = true;
 
-    if (savedOnly && !savedIds.has(opportunity.id)) {
+    if (savedOnly && !savedIds.includes(opportunity.id)) {
       matchesSaved = false;
     }
 
@@ -134,6 +144,19 @@ function OpportunitiesSection() {
     <section className="panel opportunities-panel">
       <div className="panel-header">
         <h2 className="panel-title">Opportunities</h2>
+
+        <p className="activity-summary">Activity: {totalActivity}</p>
+
+        <RecentlyViewedList />
+
+        {savedIds.length > 0 && (
+          <button
+            className="clear-saved-button"
+            onClick={() => dispatch(clearAllSaved())}
+          >
+            Clear saved ({savedIds.length})
+          </button>
+        )}
 
         {!isLoading && !hasError && (
           <>

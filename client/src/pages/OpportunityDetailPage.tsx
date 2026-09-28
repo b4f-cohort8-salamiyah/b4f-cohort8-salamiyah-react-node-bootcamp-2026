@@ -5,6 +5,9 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
+import RecentlyViewedList from "../components/RecentlyViewedList";
+import { recordView } from "../store/recentlyViewedSlice";
+import { useAppDispatch } from "../store/hooks";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -21,6 +24,7 @@ const WORK_MODE_LABELS = {
 
 function OpportunityDetailPage() {
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { notify } = useNotify();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
@@ -34,6 +38,10 @@ function OpportunityDetailPage() {
     try {
       const opportunities = await fetchOpportunities();
       const match = opportunities.find((el) => String(el.id) === id) ?? null;
+
+      if (match) {
+        dispatch(recordView({ id: match.id, title: match.title }));
+      }
 
       setOpportunity(match);
       setIsLoading(false);
@@ -80,6 +88,7 @@ function OpportunityDetailPage() {
   return (
     <section className="panel opportunity-detail-page">
       <div className="panel-header">
+        <RecentlyViewedList excludeId={Number(id)} />
         <button className="back-button" onClick={() => navigate(-1)}>
           ← Back
         </button>
