@@ -33,12 +33,6 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
               className="recently-viewed-chip"
             >
               {entry.title}
-              <button
-                className="recently-viewed-remove"
-                onClick={() => dispatch(removeRecentlyViewed(entry.id))}
-              >
-                x
-              </button>
             </Link>
             <button
               className="recently-viewed-remove"

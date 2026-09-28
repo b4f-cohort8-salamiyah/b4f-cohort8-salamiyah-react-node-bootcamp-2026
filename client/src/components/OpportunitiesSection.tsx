@@ -13,7 +13,11 @@ import {
   selectSavedIds,
 } from "../store/savedOpportunitiesSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { selectTotalActivityCount } from "../store/selectors";
+import {
+  selectHasAnyActivity,
+  selectTotalActivityCount,
+} from "../store/selectors";
+import { clearAllViewed } from "../store/recentlyViewesSlice";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
@@ -21,6 +25,7 @@ function OpportunitiesSection() {
   const savedIds = useAppSelector(selectSavedIds);
 
   const totalActivity = useAppSelector(selectTotalActivityCount);
+  const hasActivities = useAppSelector(selectHasAnyActivity);
 
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -146,6 +151,17 @@ function OpportunitiesSection() {
         <h2 className="panel-title">Opportunities</h2>
 
         <p className="total-activities">Activites: {totalActivity}</p>
+        {hasActivities && (
+          <button
+            className="clear-saved-button"
+            onClick={() => {
+              dispatch(clearAllSaved());
+              dispatch(clearAllViewed());
+            }}
+          >
+            Reset Activities
+          </button>
+        )}
 
         <RecentlyViewedList />
 

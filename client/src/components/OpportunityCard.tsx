@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
-import type { RootState } from "../store/store";
 import { selectIsSaved, toggleSaved } from "../store/savedOpportunitiesSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 
