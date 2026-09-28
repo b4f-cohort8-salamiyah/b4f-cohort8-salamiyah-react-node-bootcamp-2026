@@ -39,17 +39,6 @@ textarea {
   flex-shrink: 0;
 }
 
-.navbar-brand-link {
-  color: inherit;
-  text-decoration: none;
-  border-radius: 6px;
-}
-
-.navbar-brand-link:focus-visible {
-  outline: 2px solid #4f46e5;
-  outline-offset: 4px;
-}
-
 .navbar-brand {
   display: flex;
   align-items: baseline;
@@ -891,80 +880,6 @@ textarea {
   color: #6b7089;
 }
 
-/* ---------- Recently viewed opportunities ---------- */
-
-.recently-viewed {
-  margin-bottom: 18px;
-  padding: 14px 16px;
-  border: 1px solid #e4e6f0;
-  border-radius: 10px;
-  background-color: #f8f9fd;
-}
-
-.recently-viewed-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.recently-viewed-title {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.recently-viewed-clear {
-  padding: 6px 10px;
-  border: 1px solid #e4e6f0;
-  border-radius: 6px;
-  background-color: #ffffff;
-  color: #4a4f6a;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.recently-viewed-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-}
-
-.recently-viewed-list li {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.recently-viewed-link {
-  display: block;
-  padding: 7px 11px;
-  border-radius: 8px;
-  background-color: #eef0ff;
-  color: #4f46e5;
-  font-size: 12.5px;
-  font-weight: 600;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-}
-
-.recently-viewed-link:hover {
-  background-color: #e4e6ff;
-  text-decoration: underline;
-}
-
-.recently-viewed-clear:hover {
-  border-color: #c9cbe8;
-  color: #4f46e5;
-}
-
-.recently-viewed-link:focus-visible,
-.recently-viewed-clear:focus-visible {
-  outline: 2px solid #4f46e5;
-  outline-offset: 3px;
-}
-
 .opportunity-detail-not-found {
   padding: 20px;
   display: flex;
@@ -1080,41 +995,28 @@ textarea {
   border-color: #4f46e5;
   background-color: #f4f4ff;
 }
+
 .recently-viewed-item {
   display: inline-flex;
-  align-items: stretch;
-  flex-wrap: nowrap;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.recently-viewed-item .recently-viewed-chip {
-  min-width: 0;
-  border-radius: 8px 0 0 8px;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-.recently-viewed-remove {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  padding: 4px 9px;
+  gap: 2px;
+}
+.recently-viewed-remove {
   border: none;
-  border-left: 1px solid #dcdff5;
-  border-radius: 0 8px 8px 0;
-  background-color: #eef0ff;
-  color: #4f46e5;
-  font-size: 18px;
+  background: none;
+  color: #6b7089;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
   cursor: pointer;
 }
-
 .recently-viewed-remove:hover {
-  background-color: #e4e6ff;
+  color: #d14343;
 }
 
-.recently-viewed-remove:focus-visible {
-  outline: 2px solid #4f46e5;
-  outline-offset: 2px;
+.activity-summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7089;
+  margin: 0;
 }

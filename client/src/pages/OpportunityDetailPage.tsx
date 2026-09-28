@@ -5,9 +5,9 @@ import { applyToOpportunity, fetchOpportunities } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
-import { useDispatch } from "react-redux";
-import { recordView } from "../store/recentlyViewedSlice";
 import RecentlyViewedList from "../components/RecentlyViewedList";
+import { recordView } from "../store/recentlyViewedSlice";
+import { useAppDispatch } from "../store/hooks";
 
 const TYPE_LABELS = {
   job: "Job",
@@ -24,14 +24,33 @@ const WORK_MODE_LABELS = {
 
 function OpportunityDetailPage() {
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { notify } = useNotify();
-  const dispatch = useDispatch();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
+
+  async function load() {
+    setIsLoading(true);
+    setHasError(false);
+    try {
+      const opportunities = await fetchOpportunities();
+      const match = opportunities.find((el) => String(el.id) === id) ?? null;
+
+      if (match) {
+        dispatch(recordView({ id: match.id, title: match.title }));
+      }
+
+      setOpportunity(match);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setHasError(true);
+      setIsLoading(false);
+    }
+  }
 
   async function handleApply() {
     if (!opportunity) return;
@@ -63,41 +82,8 @@ function OpportunityDetailPage() {
   }
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      setIsLoading(true);
-      setHasError(false);
-      setOpportunity(null);
-
-      try {
-        const opportunities = await fetchOpportunities();
-        // Ignore requests from a previous route or StrictMode's cleanup.
-        if (cancelled) return;
-
-        const match =
-          opportunities.find((entry) => String(entry.id) === id) ?? null;
-        setOpportunity(match);
-        if (match) {
-          dispatch(
-            recordView({
-              id: match.id,
-              title: match.title,
-            }),
-          );
-        }
-      } catch {
-        if (!cancelled) setHasError(true);
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    }
-
     load();
-    return () => {
-      cancelled = true;
-    };
-  }, [id, retryCount, dispatch]);
+  }, [id]);
 
   return (
     <section className="panel opportunity-detail-page">
@@ -111,7 +97,7 @@ function OpportunityDetailPage() {
         {!isLoading && hasError && (
           <ErrorMessage
             message="We could not load this opportunity."
-            onRetry={() => setRetryCount((previous) => previous + 1)}
+            onRetry={load}
           />
         )}
 
