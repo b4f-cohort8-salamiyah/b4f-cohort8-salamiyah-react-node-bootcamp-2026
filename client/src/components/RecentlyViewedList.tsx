@@ -6,6 +6,8 @@ import {
   selectRecentlyViewedExcluding,
 } from "../store/recentlyViewedSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { selectRecentlyViewedNotSaved } from "../store/selectors";
+import { toggleSaved } from "../store/savedOpportunitiesSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -18,6 +20,14 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
   );
+  const recentlyViewedNotSaved = useAppSelector((state) =>
+    selectRecentlyViewedNotSaved(state),
+  ).filter((entry) => entry.id !== excludeId);
+  const recentlyViewedNotSavedCount = recentlyViewedNotSaved.length;
+
+  function handleSaveAll() {
+    recentlyViewedNotSaved.forEach((entry) => dispatch(toggleSaved(entry.id)));
+  }
 
   if (visible.length === 0) {
     return null;
@@ -28,7 +38,7 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
       <span className="recently-viewed-label">Recently viewed:</span>
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
-          <li key={entry.id}>
+          <li key={entry.id} className="recently-viewed-item">
             <Link
               to={`/opportunities/${entry.id}`}
               className="recently-viewed-chip"
@@ -45,6 +55,20 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
           </li>
         ))}
       </ul>
+      {recentlyViewedNotSavedCount > 0 && (
+        <div className="recently-viewed-unsaved">
+          <span className="recently-viewed-label">
+            {recentlyViewedNotSavedCount} of these aren't saved yet.
+          </span>
+          <button
+            type="button"
+            className="clear-saved-button"
+            onClick={handleSaveAll}
+          >
+            Save all
+          </button>
+        </div>
+      )}
       <button
         className="recently-viewed-clear"
         onClick={() => dispatch(clearRecentlyViewed())}

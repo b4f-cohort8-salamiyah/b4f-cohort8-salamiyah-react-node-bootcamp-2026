@@ -1001,6 +1001,18 @@ textarea {
   align-items: center;
   gap: 2px;
 }
+
+.recently-viewed-unsaved {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recently-viewed-unsaved button:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 3px;
+}
 .recently-viewed-remove {
   border: none;
   background: none;
