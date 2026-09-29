@@ -8,12 +8,20 @@
 // separate project and is started in its own terminal).
 
 import express from "express";
+import dotenv from "dotenv";
 import { initialPosts, initialOpportunities } from "./data.js";
 
-const PORT = 3001;
+dotenv.config();
+
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(req.method, req.path);
+  next();
+});
 
 let posts = initialPosts;
 let opportunities = initialOpportunities;
@@ -71,7 +79,7 @@ app.post("/api/posts", (req, res) => {
     id: nextPostId,
     author: "You",
     avatar: "YOU",
-    category,
+    category: category,
     content: trimmedContent,
     createdAt: new Date().toISOString(),
     likes: 0,
@@ -117,6 +125,19 @@ app.get("/api/opportunities", async (req, res) => {
   await delay(350);
 
   res.json(opportunities);
+});
+
+app.get("/api/opportunities/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const opportunity = opportunities.find((candidate) => candidate.id === id);
+
+  if (!opportunity) {
+    return res
+      .status(404)
+      .json({ error: `No opportunity found with id ${id}.` });
+  }
+
+  res.json(opportunity);
 });
 
 app.patch("/api/opportunities/:id", (req, res) => {
