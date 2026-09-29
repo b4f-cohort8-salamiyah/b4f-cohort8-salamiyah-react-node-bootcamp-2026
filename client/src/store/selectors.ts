@@ -12,7 +12,7 @@ export function selectHasAnyActivity(state: RootState) {
 
 export function selectRecentlyViewedNotSaved(state: RootState) {
   const savedIds = selectSavedIds(state);
-  const recentlyViewed = selectRecentlyViewed(state);
-
-  return recentlyViewed.filter((entry) => !savedIds.includes(entry.id));
+  return selectRecentlyViewed(state).filter(
+    (entry) => !savedIds.includes(entry.id),
+  );
 }
