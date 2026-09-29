@@ -178,6 +178,16 @@ app.patch("/api/opportunities/:id", (req, res) => {
   res.json(opportunity);
 });
 
+app.get("/api/health", (req, res) => {
+
+  const health = {
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  };
+  res.status(200).json(health);
+});
+
 app.listen(PORT, () => {
   console.log(`B4F Hub local API running at http://localhost:${PORT}`);
 });
