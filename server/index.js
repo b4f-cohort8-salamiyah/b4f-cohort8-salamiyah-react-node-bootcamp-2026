@@ -28,8 +28,10 @@ let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
+const OPPORTUNITY_TYPES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
+
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -148,6 +150,22 @@ app.get("/api/opportunities/:id", (req, res) => {
 
   res.json(opportunity);
 });
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const { type } = req.params;
+
+  if (!OPPORTUNITY_TYPES.includes(type)) {
+    return res
+    .status(400)
+    .json({error: `Invalid type "${type}". Valid types are: ${OPPORTUNITY_TYPES.join(", ")}.`,
+    });
+  }
+
+  const matches = opportunities.filter(
+    (opportunity) => opportunity.type === type,
+  );
+
+  res.json(matches);
+});
 
 app.patch("/api/opportunities/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -176,6 +194,16 @@ app.patch("/api/opportunities/:id", (req, res) => {
   opportunity.applied = true;
 
   res.json(opportunity);
+});
+
+
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  });
 });
 
 app.listen(PORT, () => {

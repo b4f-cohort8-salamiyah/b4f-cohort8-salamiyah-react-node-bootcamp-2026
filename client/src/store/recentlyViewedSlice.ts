@@ -13,20 +13,9 @@ interface RecentlyViewedEntry {
 interface RecentlyViewedState {
   entries: RecentlyViewedEntry[];
 }
-export const RECENTLY_VIEWED_ENTRIES_KEY = "recentlyViewedEntries";
 
 
-function loadRecentlyViewed(): RecentlyViewedEntry[] {
-  const viewed = localStorage.getItem(RECENTLY_VIEWED_ENTRIES_KEY);
-  if (!viewed) {
-    return [];
-  }
-  try {
-    return JSON.parse(viewed);
-  } catch {
-    return [];
-  }
-}
+
 const MAX_RECENTLY_VIEWED = 5;
 export const RECENTLY_VIEWED_ENTRIES_KEY = "recentlyViewedEntries";
 

@@ -15,7 +15,6 @@ interface RecentlyViewedListProps {
 
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useAppDispatch();
-  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
 const count = useAppSelector(selectRecentlyViewedCount);
 
   const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
@@ -69,21 +68,7 @@ const count = useAppSelector(selectRecentlyViewedCount);
       >
         Clear ({count})
       </button>
-      {notSaved.length > 0 && (
-  <>
-    <p className="not-saved-note">
-      {notSaved.length} of these aren't saved yet.
-    </p>
-    <button
-      className="save-all-button"
-      onClick={() => {
-        notSaved.forEach((entry) => dispatch(toggleSaved(entry.id)));
-      }}
-    >
-      Save all
-    </button>
-  </>
-)}
+      
 
     </div>
   );
