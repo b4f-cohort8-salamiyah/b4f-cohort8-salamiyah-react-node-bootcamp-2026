@@ -28,12 +28,29 @@ let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
+const ALLOWED_TYPES = ["announcement", "event", "community", "resource"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
+
+let BackEndStatus = "ok";
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+app.get("/api/health" , async (req, res) => {
+  return res.status(404).json({error:"the server is down"});
+  if(BackEndStatus == "ok"){
+    return res.json({status:"ok" , opportunities:opportunities.length , posts:posts.length});
+  }
+});
+
+app.get("/api/opportunities/type/:type", async (req , res) => {
+  if(!ALLOWED_TYPES.includes(req.params.type) ){
+    return res.status(400).json({error:`couldnt find the type ${req.params.type} is not included in ${ALLOWED_TYPES}`})
+  }
+  res.json({status:"ok" , message:"this category exists"});
+})
 
 // ---------- Community ----------
 
