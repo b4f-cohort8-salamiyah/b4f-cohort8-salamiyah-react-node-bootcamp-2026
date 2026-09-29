@@ -153,7 +153,7 @@ function OpportunitiesSection() {
         <p className="total-activities">Activites: {totalActivity}</p>
         {hasActivities && (
           <button
-            className="clear-saved-button"
+            className="reset-activity-button"
             onClick={() => {
               dispatch(clearAllSaved());
               dispatch(clearAllViewed());

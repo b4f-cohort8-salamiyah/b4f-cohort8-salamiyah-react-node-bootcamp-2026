@@ -6,6 +6,8 @@ import {
 } from "../store/recentlyViewesSlice";
 import { clearAllViewed } from "../store/recentlyViewesSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { selectRecentlyViewedNotSaved } from "../store/selectors";
+import { toggleSaved } from "../store/savedOpportunitiesSlice";
 
 interface RecentlyViewedListProps {
   excludeId?: number;
@@ -18,6 +20,8 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   );
   const count = useAppSelector((state) => selectRecentlyViewedCount(state));
 
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
+
   if (visible.length === 0) {
     return null;
   }
@@ -27,7 +31,7 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
       <span className="recently-viewed-label">Recently viewed:</span>
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
-          <li key={entry.id}>
+          <li className="recently-viewed-item" key={entry.id}>
             <Link
               to={`/opportunities/${entry.id}`}
               className="recently-viewed-chip"
@@ -44,6 +48,21 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
           </li>
         ))}
       </ul>
+      {notSaved.length > 0 && (
+        <div>
+          <p className="recently-viewed-not-saved">
+            {notSaved.length} of these aren't saved yet.
+          </p>
+          <button
+            className="recently-viewed-save-all"
+            onClick={() =>
+              notSaved.forEach((entry) => dispatch(toggleSaved(entry.id)))
+            }
+          >
+            Save All
+          </button>
+        </div>
+      )}
       <button
         className="recently-viewed-clear"
         onClick={() => dispatch(clearAllViewed())}

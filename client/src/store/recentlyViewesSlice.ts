@@ -1,6 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
+export const RECENTLY_VIEWED_ENTRIES_KEY = "recentlyViewedEntries";
+
+function loadRecentlyViewed(): RecentlyViewedEntry[] {
+  const saved = localStorage.getItem(RECENTLY_VIEWED_ENTRIES_KEY);
+  if (!saved) return [];
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    return [];
+  }
+}
+
 interface RecentlyViewedEntry {
   id: number;
   title: string;
@@ -11,7 +23,7 @@ interface RecentlyViewedState {
 }
 
 const initialState: RecentlyViewedState = {
-  entries: [],
+  entries: loadRecentlyViewed(),
 };
 
 const MAX_RECENTLY_VIEWED = 5;

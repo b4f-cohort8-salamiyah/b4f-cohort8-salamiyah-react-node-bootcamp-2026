@@ -2,7 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import savedOpportunitiesReducer, {
   SAVED_OPPORTUNITIES_IDS_KEY,
 } from "./savedOpportunitiesSlice";
-import recentlyViewedReducer from "./recentlyViewesSlice";
+import recentlyViewedReducer, {
+  RECENTLY_VIEWED_ENTRIES_KEY,
+} from "./recentlyViewesSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,6 +19,10 @@ store.subscribe(() => {
   localStorage.setItem(
     SAVED_OPPORTUNITIES_IDS_KEY,
     JSON.stringify(state.savedOpportunities.savedIds),
+  );
+  localStorage.setItem(
+    RECENTLY_VIEWED_ENTRIES_KEY,
+    JSON.stringify(state.recentlyViewed.entries),
   );
 });
 
