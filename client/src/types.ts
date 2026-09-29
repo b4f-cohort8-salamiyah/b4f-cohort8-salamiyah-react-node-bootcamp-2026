@@ -38,3 +38,8 @@ export interface AppNotification {
   message: string;
   tone: NotificationTone;
 }
+export interface ApiHealth {
+  status: string;
+  opportunities: number;
+  posts: number;
+}
