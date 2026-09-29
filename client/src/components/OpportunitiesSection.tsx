@@ -8,16 +8,24 @@ import ErrorMessage from "./ErrorMessage";
 import EmptyState from "./EmptyState";
 import { useNotify } from "../context/NotificationContext";
 import RecentlyViewedList from "./RecentlyViewedList";
-import { useDispatch, useSelector } from "react-redux";
 import {
   clearAllSaved,
   selectSavedIds,
 } from "../store/savedOpportunitiesSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import {
+  selectHasAnyActivity,
+  selectTotalActivityCount,
+} from "../store/selectors";
+import { clearRecentlyViewed } from "../store/recentlyViewedSlice";
 
 function OpportunitiesSection() {
   const { notify } = useNotify();
-  const dispatch = useDispatch();
-  const savedIds = useSelector(selectSavedIds);
+  const dispatch = useAppDispatch();
+  const savedIds = useAppSelector(selectSavedIds);
+
+  const totalActivity = useAppSelector(selectTotalActivityCount);
+  const hasActivity = useAppSelector(selectHasAnyActivity);
 
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -142,6 +150,22 @@ function OpportunitiesSection() {
       <div className="panel-header">
         <h2 className="panel-title">Opportunities</h2>
 
+        <p className="activity-summary">Activity: {totalActivity}</p>
+
+        {hasActivity && (
+          <button
+            className="reset-activity-button"
+            onClick={() => {
+              dispatch(clearAllSaved());
+              dispatch(clearRecentlyViewed());
+            }}
+          >
+            Reset activity
+          </button>
+        )}
+
+        <RecentlyViewedList />
+
         {savedIds.length > 0 && (
           <button
             className="clear-saved-button"
@@ -150,8 +174,6 @@ function OpportunitiesSection() {
             Clear saved ({savedIds.length})
           </button>
         )}
-
-        <RecentlyViewedList />
 
         {!isLoading && !hasError && (
           <>
