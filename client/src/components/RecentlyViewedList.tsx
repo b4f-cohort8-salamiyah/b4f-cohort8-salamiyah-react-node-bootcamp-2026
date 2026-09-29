@@ -18,6 +18,8 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
 const count = useAppSelector(selectRecentlyViewedCount);
 
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
+
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
   );
@@ -48,6 +50,19 @@ const count = useAppSelector(selectRecentlyViewedCount);
           </li>
         ))}
       </ul>
+      {notSaved.length > 0 && (
+        <div className="recently-viewed-not-saved">
+          <p>{notSaved.length} of these aren't saved yet.</p>
+          <button
+            className="recently-viewed-save-all"
+            onClick={() =>
+              notSaved.forEach((entry) => dispatch(toggleSaved(entry.id)))
+            }
+          >
+            Save all
+          </button>
+        </div>
+      )}
       <button
         className="recently-viewed-clear"
         onClick={() => dispatch(clearRecentlyViewed())}
