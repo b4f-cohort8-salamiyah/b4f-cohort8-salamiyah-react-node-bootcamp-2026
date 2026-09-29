@@ -1,9 +1,6 @@
-import type {RootState} from "./store";
-import {selectSavedCount, selectSavedIds} from "./savedOpportunitiesSlice";
-import {
-  selectRecentlyViewedCount,
-  selectRecentlyViewed,
-} from "./recentlyViewedSlice";
+import type { RootState } from "./store";
+import { selectSavedCount, selectSavedIds } from "./savedOpportunitiesSlice";
+import { selectRecentlyViewed, selectRecentlyViewedCount } from "./recentlyViewedSlice";
 
 export function selectTotalActivityCount(state: RootState) {
   return selectSavedCount(state) + selectRecentlyViewedCount(state);
