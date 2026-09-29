@@ -11,6 +11,28 @@ body {
   color: #1e2130;
   line-height: 1.55;
 }
+.api-status{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: rgb(231, 231, 231);
+  padding: 0 10px;
+}
+.circle{
+  width: 10px;
+  height: 10px;
+  background-color: gray;
+  border-radius: 50%;
+  padding: 3px;
+  text-align: center;
+}
+.green{
+  background-color: #07d147;
+}
+.red{
+  background-color: #ce1807;
+}
 
 button,
 input,

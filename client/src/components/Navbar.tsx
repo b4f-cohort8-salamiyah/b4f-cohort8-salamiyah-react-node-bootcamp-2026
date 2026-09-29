@@ -1,13 +1,25 @@
 import { NavLink } from "react-router-dom";
 import { selectSavedCount } from "../store/savedOpportunitiesSlice";
 import { useAppSelector } from "../store/hooks";
+import { useEffect, useState } from "react";
+import { fetchApiHealth } from "../api";
 
 function Navbar() {
+  const [apiCondition, setapiCondition] = useState(true);
   const savedCount = useAppSelector(selectSavedCount);
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
   }
+
+  useEffect(() => {
+    const checkhealth = async ()=>{
+      const ok = await fetchApiHealth();
+      setapiCondition(ok);
+    }
+
+    checkhealth();
+  },[]);
 
   return (
     <header className="navbar">
@@ -20,6 +32,10 @@ function Navbar() {
       </p>
 
       <nav className="navbar-links">
+        <div className="api-status">
+          <div className={apiCondition?"circle green":"circle red"}></div>
+          <div className="text">{apiCondition?"live":"Down"}</div>
+        </div>
         <NavLink to="/" end className={navLinkClassName}>
           Home
         </NavLink>

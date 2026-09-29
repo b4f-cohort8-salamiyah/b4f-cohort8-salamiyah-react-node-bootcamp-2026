@@ -106,3 +106,15 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
 
   return (await response.json()) as Opportunity;
 }
+
+
+export async function fetchApiHealth(): Promise<boolean> {
+  const response = await fetch("/api/health");
+
+  if (!response.ok) {
+    return false;
+  }
+
+  if(response.status == 404) return false;
+  return true;
+}
