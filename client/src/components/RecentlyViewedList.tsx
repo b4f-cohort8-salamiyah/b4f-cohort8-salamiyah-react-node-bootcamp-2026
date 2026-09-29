@@ -22,14 +22,6 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
   );
-  const recentlyViewedNotSaved = useAppSelector((state) =>
-    selectRecentlyViewedNotSaved(state),
-  ).filter((entry) => entry.id !== excludeId);
-  const recentlyViewedNotSavedCount = recentlyViewedNotSaved.length;
-
-  function handleSaveAll() {
-    recentlyViewedNotSaved.forEach((entry) => dispatch(toggleSaved(entry.id)));
-  }
 
   if (visible.length === 0) {
     return null;
