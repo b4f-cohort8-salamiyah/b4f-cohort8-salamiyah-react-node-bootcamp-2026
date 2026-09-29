@@ -46,6 +46,15 @@ app.get("/api/posts", async (req, res) => {
   res.json(sorted);
 });
 
+app.get("/api/posts/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const post = posts.find((candidate) => candidate.id === id);
+  if (!post) {
+    return res.status(404).json({ error: `No post found with id ${id}.` });
+  }
+  res.json(post);
+});
+
 app.post("/api/posts", (req, res) => {
   const { content, category } = req.body ?? {};
 
