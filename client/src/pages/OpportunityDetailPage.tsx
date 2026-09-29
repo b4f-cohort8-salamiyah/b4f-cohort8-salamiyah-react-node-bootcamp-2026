@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunities } from "../api";
+import { applyToOpportunity, fetchOpportunityById } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -36,8 +36,10 @@ function OpportunityDetailPage() {
     setIsLoading(true);
     setHasError(false);
     try {
-      const opportunities = await fetchOpportunities();
-      const match = opportunities.find((el) => String(el.id) === id) ?? null;
+      // const opportunities = await fetchOpportunities();
+      // const match = opportunities.find((el) => String(el.id) === id) ?? null;
+
+      const match = id ? await fetchOpportunityById(Number(id)) : null;
 
       if (match) {
         dispatch(recordView({ id: match.id, title: match.title }));
