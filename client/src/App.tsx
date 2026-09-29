@@ -23,7 +23,6 @@ function App() {
             element={<OpportunityDetailPage />}
           />
 
-          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
