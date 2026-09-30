@@ -2,6 +2,7 @@ import type { Opportunity, Post, PostCategory } from "./types";
 
 const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
+const HEALTH_URL = "/api/health";
 
 async function readErrorMessage(
   response: Response,
@@ -105,4 +106,14 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
   }
 
   return (await response.json()) as Opportunity;
+}
+
+export async function fetchApiHealth(): Promise<number> {
+  const response = await fetch(HEALTH_URL);
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, "error"));
+  }
+
+  return await response.json() ;
 }
