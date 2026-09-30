@@ -8,12 +8,10 @@
 // separate project and is started in its own terminal).
 
 import express from "express";
-import dotenv from "dotenv";
 import { initialPosts, initialOpportunities } from "./data.js";
 
-dotenv.config();
 
-const PORT = process.env.PORT || 3001;
+const PORT =  3001;
 
 const app = express();
 app.use(express.json());
@@ -30,6 +28,7 @@ let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
+const ALLOWED_TYPES = ["job", "internship", "scholarship", "volunteer"];
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -136,6 +135,22 @@ app.get("/api/opportunities", async (req, res) => {
   res.json(opportunities);
 });
 
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const type = String(req.params.type);
+
+  if (!ALLOWED_TYPES.includes(type)) {
+    return res.status(400).json({
+      error: "the type is not valid",
+    });
+  }
+
+  const matches = opportunities.filter(
+    (opportunity) => opportunity.type === type
+  );
+
+  res.json(matches);
+});
+
 app.get("/api/opportunities/:id", (req, res) => {
   const id = Number(req.params.id);
   const opportunity = opportunities.find((candidate) => candidate.id === id);
@@ -178,6 +193,15 @@ app.patch("/api/opportunities/:id", (req, res) => {
   res.json(opportunity);
 });
 
+app.get("/api/health" , (req, res) =>{
+  res.json({
+    status : 'ok',
+    opportunities : opportunities.length,
+    posts : posts.length,
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`B4F Hub local API running at http://localhost:${PORT}`);
 });
+
