@@ -28,6 +28,8 @@ let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
+//STRETCH
+const ALLOWED_OPPORTUNITIES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
 
@@ -136,6 +138,20 @@ app.get("/api/opportunities", async (req, res) => {
   res.json(opportunities);
 });
 
+//STRETCH
+app.get("/api/opportunities/type/:type", async (req, res) => {
+  const type = req.params.type;
+  if (typeof type !== "string" || !ALLOWED_OPPORTUNITIES.includes(type)) {
+    return res.status(400).json({
+      error: `Opportunities is  must be one of: ${ALLOWED_OPPORTUNITIES.join(", ")}.`,
+    });
+  }
+  const opportunity = opportunities.filter(
+    (candidate) => candidate.type === type,
+  );
+  res.status(200).json(opportunity);
+});
+
 app.get("/api/opportunities/:id", (req, res) => {
   const id = Number(req.params.id);
   const opportunity = opportunities.find((candidate) => candidate.id === id);
@@ -176,6 +192,16 @@ app.patch("/api/opportunities/:id", (req, res) => {
   opportunity.applied = true;
 
   res.json(opportunity);
+});
+//CORE
+app.get("/api/health", async (req, res) => {
+  let opportunitiesCount = opportunities.length;
+  let postsCount = posts.length;
+  res.status(200).json({
+    status: "ok",
+    opportunities: opportunitiesCount,
+    posts: postsCount,
+  });
 });
 
 app.listen(PORT, () => {
