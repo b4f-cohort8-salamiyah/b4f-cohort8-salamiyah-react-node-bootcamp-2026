@@ -37,6 +37,10 @@ function delay(ms) {
 
 // ---------- Community ----------
 
+app.get("/api/health", async (req, res) => {
+  res.status(200).json({ status:"OK", opportunities: opportunities.length, posts: posts.length });
+});
+
 app.get("/api/posts", async (req, res) => {
   await delay(350);
 
