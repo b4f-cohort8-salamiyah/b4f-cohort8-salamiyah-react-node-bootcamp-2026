@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { selectSavedCount } from "../store/savedOpportunitiesSlice";
+import { useAppSelector } from "../store/hooks";
 
 function Navbar() {
-  const savedCount = useSelector(selectSavedCount);
+  const savedCount = useAppSelector(selectSavedCount);
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";

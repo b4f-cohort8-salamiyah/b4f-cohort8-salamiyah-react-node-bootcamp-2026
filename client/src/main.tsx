@@ -4,7 +4,6 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationProvider } from "./context/NotificationContext";
-import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
@@ -16,9 +15,7 @@ if (rootElement) {
       <BrowserRouter>
         <Provider store={store}>
           <NotificationProvider>
-            <RecentlyViewedProvider>
-              <App />
-            </RecentlyViewedProvider>
+            <App />
           </NotificationProvider>
         </Provider>
       </BrowserRouter>
