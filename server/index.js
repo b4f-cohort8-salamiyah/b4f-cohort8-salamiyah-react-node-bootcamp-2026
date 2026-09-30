@@ -55,6 +55,17 @@ app.post("/api/posts", (req, res) => {
       .json({ error: "content is required and must be a string." });
   }
 
+  app.get("/api/posts/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const post = posts.find((candidate) => candidate.id === id);
+
+    if (!post) {
+      return res.status(404).json({ error: `No post found with id ${id}.` });
+    }
+
+    res.json(post);
+  });
+
   const trimmedContent = content.trim();
 
   if (trimmedContent.length < MIN_CONTENT_LENGTH) {
