@@ -30,6 +30,7 @@ let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
+const OPPORTUNITY_TYPES = ["job", "internship", "volunteer", "scholarship"];
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,7 +39,13 @@ function delay(ms) {
 // ---------- Community ----------
 
 app.get("/api/health", async (req, res) => {
-  res.status(200).json({ status:"OK", opportunities: opportunities.length, posts: posts.length });
+  res
+    .status(200)
+    .json({
+      status: "OK",
+      opportunities: opportunities.length,
+      posts: posts.length,
+    });
 });
 
 app.get("/api/posts", async (req, res) => {
@@ -191,6 +198,22 @@ app.patch("/api/opportunities/:id", (req, res) => {
   opportunity.applied = true;
 
   res.json(opportunity);
+});
+
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const { type } = req.params;
+
+  if (!OPPORTUNITY_TYPES.includes(type)) {
+    return res.status(400).json({
+      error: `Invalid opportunity type. Valid types are: ${OPPORTUNITY_TYPES.join(", ")}`,
+    });
+  }
+
+  const filteredOpportunities = opportunities.filter(
+    (opportunity) => opportunity.type === type
+  );
+
+  return res.status(200).json(filteredOpportunities);
 });
 
 app.listen(PORT, () => {
