@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import type { Opportunity } from "../types";
+import { selectIsSaved, toggleSaved } from "../store/savedOpportunitiesSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
-  isSaved: boolean;
-  onToggleSaved: (id: number) => void;
   onApply: (id: number) => void;
   isApplying: boolean;
 }
@@ -24,11 +24,15 @@ const WORK_MODE_LABELS = {
 
 function OpportunityCard({
   opportunity,
-  isSaved,
-  onToggleSaved,
   onApply,
   isApplying,
 }: OpportunityCardProps) {
+  const dispatch = useAppDispatch();
+
+  const isSaved = useAppSelector((state) =>
+    selectIsSaved(state, opportunity.id),
+  );
+
   return (
     <li className="opportunity-card">
       <div className="opportunity-card-header">
@@ -39,7 +43,7 @@ function OpportunityCard({
         </div>
         <button
           className={`save-button ${isSaved ? "saved" : ""}`}
-          onClick={() => onToggleSaved(opportunity.id)}
+          onClick={() => dispatch(toggleSaved(opportunity.id))}
           aria-label={isSaved ? "Remove from saved" : "Save opportunity"}
         >
           {isSaved ? "★" : "☆"}
