@@ -143,14 +143,17 @@ app.get("/api/opportunities", async (req, res) => {
 });
 
 app.get("/api/opportunities/type/:type", (req, res) => {
-  const type = req.params.type;
-  const opportunitytype = opportunities.filter((candidate) => candidate.type === type);
+  const { type } = req.params;
 
-  if (!opportunitytype) {
-    return res.status(404).json({error: `No opportunity found with this type ${type}.`});
+  const opportunitiestype = opportunities.filter((candidate) => candidate.type === type);
+
+  if (!ALLOWED_OPPORTUNITY_TYPES.includes(type)) {
+    return res.status(400).json({
+      error: `no results match ${type} type`,
+    });
   }
 
-  res.json(opportunitytype);
+  res.json(opportunitiestype);
 });
 
 app.get("/api/opportunities/:id", (req, res) => {
