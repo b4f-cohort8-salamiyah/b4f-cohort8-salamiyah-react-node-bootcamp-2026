@@ -106,3 +106,16 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
 
   return (await response.json()) as Opportunity;
 }
+export interface ApiHealth {
+  status: string;
+  opportunities: number;
+  posts: number;
+}
+
+export async function fetchApiHealth(): Promise<ApiHealth> {
+  const response = await fetch("/api/health");
+  if (!response.ok) {
+    throw new Error("Failed to fetch API health");
+  }
+  return response.json() as Promise<ApiHealth>;
+}
