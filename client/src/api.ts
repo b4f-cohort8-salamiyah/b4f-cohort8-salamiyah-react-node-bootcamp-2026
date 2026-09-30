@@ -106,3 +106,17 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
 
   return (await response.json()) as Opportunity;
 }
+export type ApiHealth = {
+  status: string;
+  opportunities: number;
+  posts: number;
+};
+export async function fetchApiHealth(): Promise<ApiHealth> {
+  const response = await fetch("/api/health");
+
+  if (!response.ok) {
+    throw new Error(`API health request failed: ${response.status}`);
+  }
+
+  return (await response.json()) as ApiHealth;
+}

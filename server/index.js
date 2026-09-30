@@ -129,11 +129,27 @@ app.patch("/api/posts/:id", (req, res) => {
 });
 
 // ---------- Opportunities ----------
+const OPPORTUNITY_TYPES = ["job", "internship", "volunteer", "scholarship"];
 
 app.get("/api/opportunities", async (req, res) => {
   await delay(350);
 
   res.json(opportunities);
+});
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const { type } = req.params;
+
+  if (!OPPORTUNITY_TYPES.includes(type)) {
+    return res.status(400).json({
+      error: `Invalid opportunity type. Valid types are: ${OPPORTUNITY_TYPES.join(", ")}.`,
+    });
+  }
+
+  const filteredOpportunities = opportunities.filter(
+    (opportunity) => opportunity.type === type,
+  );
+
+  res.status(200).json(filteredOpportunities);
 });
 
 app.get("/api/opportunities/:id", (req, res) => {
@@ -177,7 +193,13 @@ app.patch("/api/opportunities/:id", (req, res) => {
 
   res.json(opportunity);
 });
-
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  });
+});
 app.listen(PORT, () => {
   console.log(`B4F Hub local API running at http://localhost:${PORT}`);
 });
