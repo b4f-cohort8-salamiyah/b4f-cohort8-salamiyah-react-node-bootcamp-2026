@@ -2,23 +2,25 @@ import { NavLink } from "react-router-dom";
 import { selectSavedCount } from "../store/savedOpportunitiesSlice";
 import { useAppSelector } from "../store/hooks";
 import { useEffect, useState } from "react";
-import { fetchApiHealth} from "../api";
+import { fetchApiHealth } from "../api";
 
 function Navbar() {
   const savedCount = useAppSelector(selectSavedCount);
-  const [apiHealth, setApiHealth] = useState<any | null>(null);
-
-  useEffect(() => {
-    fetchApiHealth()
-      .then((data) => {
-        setApiHealth(data);
-      })
-      .catch(() => {});
-  }, []);
+  const [apiSummary, setApiSummary] = useState<string | null>(null);
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
   }
+
+  useEffect(() => {
+    fetchApiHealth()
+      .then((health) => {
+        setApiSummary(
+          `API: ${health.opportunities} opportunities · ${health.posts} posts`,
+        );
+      })
+      .catch();
+  }, []);
 
   return (
     <header className="navbar">
@@ -29,12 +31,7 @@ function Navbar() {
       <p className="navbar-tagline">
         Community &amp; Opportunities for B4F trainees and alumni
       </p>
-
-      {apiHealth && (
-        <p className="navbar-health">
-          {apiHealth.opportunities} opportunities · {apiHealth.posts} posts
-        </p>
-      )}
+      {apiSummary && <p className="navbar-api-summary">{apiSummary}</p>}
 
       <nav className="navbar-links">
         <NavLink to="/" end className={navLinkClassName}>

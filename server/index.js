@@ -28,25 +28,25 @@ let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
+const ALLOWED_TYPES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
-const OPPORTUNITY_TYPES = ["job", "internship", "volunteer", "scholarship"];
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// ---------- Community ----------
+// ---------- Health ----------
 
-app.get("/api/health", async (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "OK",
-      opportunities: opportunities.length,
-      posts: posts.length,
-    });
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  });
 });
+
+// ---------- Community ----------
 
 app.get("/api/posts", async (req, res) => {
   await delay(350);
@@ -74,17 +74,6 @@ app.post("/api/posts", (req, res) => {
       .status(400)
       .json({ error: "content is required and must be a string." });
   }
-
-  app.get("/api/posts/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const post = posts.find((candidate) => candidate.id === id);
-
-    if (!post) {
-      return res.status(404).json({ error: `No post found with id ${id}.` });
-    }
-
-    res.json(post);
-  });
 
   const trimmedContent = content.trim();
 
@@ -171,6 +160,22 @@ app.get("/api/opportunities/:id", (req, res) => {
   res.json(opportunity);
 });
 
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const { type } = req.params;
+
+  if (!ALLOWED_TYPES.includes(type)) {
+    return res
+      .status(400)
+      .json({ error: `type must be one of: ${ALLOWED_TYPES.join(", ")}.` });
+  }
+
+  const matches = opportunities.filter(
+    (opportunity) => opportunity.type === type,
+  );
+
+  res.json(matches);
+});
+
 app.patch("/api/opportunities/:id", (req, res) => {
   const id = Number(req.params.id);
   const { applied } = req.body ?? {};
@@ -198,22 +203,6 @@ app.patch("/api/opportunities/:id", (req, res) => {
   opportunity.applied = true;
 
   res.json(opportunity);
-});
-
-app.get("/api/opportunities/type/:type", (req, res) => {
-  const { type } = req.params;
-
-  if (!OPPORTUNITY_TYPES.includes(type)) {
-    return res.status(400).json({
-      error: `Invalid opportunity type. Valid types are: ${OPPORTUNITY_TYPES.join(", ")}`,
-    });
-  }
-
-  const filteredOpportunities = opportunities.filter(
-    (opportunity) => opportunity.type === type
-  );
-
-  return res.status(200).json(filteredOpportunities);
 });
 
 app.listen(PORT, () => {
