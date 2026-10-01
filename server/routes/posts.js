@@ -1,9 +1,9 @@
 import express from "express";
 import {
+  createPost,
   getAllPosts,
   getPostById,
   toggleLikePost,
-  createPost,
 } from "../controllers/posts.js";
 
 const router = express.Router();

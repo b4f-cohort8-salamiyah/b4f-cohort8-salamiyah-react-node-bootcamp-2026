@@ -8,10 +8,10 @@
 // separate project and is started in its own terminal).
 
 import express from "express";
+import dotenv from "dotenv";
 import { opportunities } from "./store.js";
 import opportunitiesRouter from "./routes/opportunities.js";
 import postsRouter from "./routes/posts.js";
-import { dotenv } from "dotenv";
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -39,6 +39,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/posts", postsRouter);
 
 // ---------- Opportunities ----------
+
 app.use("/api/opportunities", opportunitiesRouter);
 
 app.listen(PORT, () => {

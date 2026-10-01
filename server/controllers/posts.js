@@ -1,9 +1,9 @@
 import {
-  ALLOWED_CATEGORIES,
-  MAX_CONTENT_LENGTH,
-  MIN_CONTENT_LENGTH,
-  nextPostId,
   posts,
+  ALLOWED_CATEGORIES,
+  MIN_CONTENT_LENGTH,
+  MAX_CONTENT_LENGTH,
+  claimNextPostId,
 } from "../store.js";
 import { delay } from "../utils.js";
 
@@ -55,7 +55,7 @@ export function createPost(req, res) {
   }
 
   const newPost = {
-    id: nextPostId,
+    id: claimNextPostId(),
     author: "You",
     avatar: "YOU",
     category: category,
@@ -70,6 +70,7 @@ export function createPost(req, res) {
 
   res.status(201).json(newPost);
 }
+
 export function toggleLikePost(req, res) {
   const id = Number(req.params.id);
   const { liked } = req.body ?? {};
