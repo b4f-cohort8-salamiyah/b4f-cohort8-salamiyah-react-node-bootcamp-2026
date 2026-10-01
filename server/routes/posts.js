@@ -1,15 +1,16 @@
 import express from "express";
 import {
-  getAllPosts,
-  getPostId,
   createPost,
-  editPost,
-} from "../controllers/posts";
+  getAllPosts,
+  getPostById,
+  toggleLikePost,
+} from "../controllers/posts.js";
 
 const router = express.Router();
+
 router.get("/", getAllPosts);
-router.get("/:id", getPostId);
+router.get("/:id", getPostById);
 router.post("/", createPost);
-router.patch("/:id", editPost);
+router.patch("/:id", toggleLikePost);
 
 export default router;

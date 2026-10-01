@@ -1,6 +1,11 @@
-import { posts } from "../store.js";
+import {
+  posts,
+  ALLOWED_CATEGORIES,
+  MIN_CONTENT_LENGTH,
+  MAX_CONTENT_LENGTH,
+  claimNextPostId,
+} from "../store.js";
 import { delay } from "../utils.js";
-
 
 export async function getAllPosts(req, res) {
   await delay(350);
@@ -11,7 +16,7 @@ export async function getAllPosts(req, res) {
   res.json(sorted);
 }
 
-export function getPostId(req, res) {
+export function getPostById(req, res) {
   const id = Number(req.params.id);
   const post = posts.find((candidate) => candidate.id === id);
   if (!post) {
@@ -50,7 +55,7 @@ export function createPost(req, res) {
   }
 
   const newPost = {
-    id: nextPostId,
+    id: claimNextPostId(),
     author: "You",
     avatar: "YOU",
     category: category,
@@ -66,7 +71,7 @@ export function createPost(req, res) {
   res.status(201).json(newPost);
 }
 
-export function editPost(req, res) {
+export function toggleLikePost(req, res) {
   const id = Number(req.params.id);
   const { liked } = req.body ?? {};
 

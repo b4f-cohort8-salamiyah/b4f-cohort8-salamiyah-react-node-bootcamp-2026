@@ -9,15 +9,7 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { initialPosts } from "./data.js";
 import { opportunities } from "./store.js";
-import { delay } from "./utils.js";
-import {
-  applyToOpportunity,
-  getAllOpportunities,
-  getOpportunitiesById,
-  getOpportunitiesByType,
-} from "./controllers/opportunities.js";
 import opportunitiesRouter from "./routes/opportunities.js";
 import postsRouter from "./routes/posts.js";
 
@@ -33,9 +25,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const MIN_CONTENT_LENGTH = 3;
-const MAX_CONTENT_LENGTH = 2000;
-
 // ---------- Health ----------
 
 app.get("/api/health", (req, res) => {
@@ -48,9 +37,10 @@ app.get("/api/health", (req, res) => {
 
 // ---------- Community ----------
 
-app.use("api/posts", postsRouter);
+app.use("/api/posts", postsRouter);
 
 // ---------- Opportunities ----------
+
 app.use("/api/opportunities", opportunitiesRouter);
 
 app.listen(PORT, () => {
