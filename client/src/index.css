@@ -1064,9 +1064,8 @@ textarea {
   text-decoration: underline;
 }
 
-.navbar-api-health{
-   font-size: 12px;
-  font-weight: 400;
-  color: #6b7089;
+.navbar-api-summary {
+  color: #9295a6;
+  font-size: 11px;
   margin: 0;
 }

@@ -18,11 +18,6 @@ export type OpportunityType =
   | "volunteer";
 export type WorkMode = "remote" | "hybrid" | "on-site";
 export type ExperienceLevel = "entry" | "junior" | "mid" | "any";
-export type ApiHealth = {
-  status: string;
-  opportunities: number;
-  posts: number;
-};
 
 export interface Opportunity {
   id: number;
@@ -46,4 +41,10 @@ export interface AppNotification {
   id: number;
   message: string;
   tone: NotificationTone;
+}
+
+export interface ApiHealth {
+  status: string;
+  opportunities: number;
+  posts: number;
 }
