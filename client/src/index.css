@@ -1075,3 +1075,9 @@ textarea {
   padding: 0;
   text-decoration: underline;
 }
+
+.navbar-api-summary {
+  color: #9295a6;
+  font-size: 11px;
+  margin: 0;
+}
