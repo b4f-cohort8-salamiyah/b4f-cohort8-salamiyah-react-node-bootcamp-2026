@@ -1,4 +1,4 @@
-import type { ApiHealthStatues, Opportunity, Post, PostCategory } from "./types";
+import type { ApiHealth, Opportunity, Post, PostCategory } from "./types";
 
 const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
@@ -77,17 +77,6 @@ export async function fetchOpportunities(): Promise<Opportunity[]> {
   return (await response.json()) as Opportunity[];
 }
 
-export async function fetchHealthStatues(): Promise<ApiHealthStatues> {
-  const response = await fetch(HEALTH_URL);
-
-  if (!response.ok) {
-    throw new Error(
-      await readErrorMessage(response, "Could not load health statues."),
-    );
-  }
-  return (await response.json()) as ApiHealthStatues;
-}
-
 export async function fetchOpportunityById(
   id: number,
 ): Promise<Opportunity | null> {
@@ -117,4 +106,16 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
   }
 
   return (await response.json()) as Opportunity;
+}
+
+export async function fetchApiHealth(): Promise<ApiHealth> {
+  const response = await fetch(HEALTH_URL);
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not reach the API."),
+    );
+  }
+
+  return (await response.json()) as ApiHealth;
 }
