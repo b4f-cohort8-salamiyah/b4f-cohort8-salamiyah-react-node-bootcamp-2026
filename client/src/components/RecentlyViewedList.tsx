@@ -13,22 +13,15 @@ interface RecentlyViewedListProps {
   excludeId?: number;
 }
 
-
 function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   const dispatch = useAppDispatch();
   const count = useAppSelector(selectRecentlyViewedCount);
 
+  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
+
   const visible = useAppSelector((state) =>
     selectRecentlyViewedExcluding(state, excludeId),
   );
-
-  const notSaved = useAppSelector(selectRecentlyViewedNotSaved);
-
-  function handleSaveAll() {
-    notSaved.forEach((entry) => {
-      dispatch(toggleSaved(entry.id));
-    });
-  }
 
   if (visible.length === 0) {
     return null;
@@ -37,27 +30,6 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
   return (
     <div className="recently-viewed">
       <span className="recently-viewed-label">Recently viewed:</span>
-
-      {notSaved.length > 0 && (
-        <div
-          className="not-saved-container"
-          style={{
-            display: "flex",
-            gap: "8px",
-            alignItems: "center",
-            marginBottom: "6px",
-          }}
-        >
-          <span className="not-saved-note">
-            {notSaved.length} of these{" "}
-            {notSaved.length === 1 ? "isn't" : "aren't"} saved yet.
-          </span>
-          <button className="save-all-button" onClick={handleSaveAll}>
-            Save all
-          </button>
-        </div>
-      )}
-
       <ul className="recently-viewed-list">
         {visible.map((entry) => (
           <li key={entry.id}>
@@ -77,6 +49,19 @@ function RecentlyViewedList({ excludeId }: RecentlyViewedListProps) {
           </li>
         ))}
       </ul>
+      {notSaved.length > 0 && (
+        <div className="recently-viewed-not-saved">
+          <p>{notSaved.length} of these aren't saved yet.</p>
+          <button
+            className="recently-viewed-save-all"
+            onClick={() =>
+              notSaved.forEach((entry) => dispatch(toggleSaved(entry.id)))
+            }
+          >
+            Save all
+          </button>
+        </div>
+      )}
       <button
         className="recently-viewed-clear"
         onClick={() => dispatch(clearRecentlyViewed())}

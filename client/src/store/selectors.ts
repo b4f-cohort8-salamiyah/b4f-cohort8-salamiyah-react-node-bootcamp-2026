@@ -1,9 +1,6 @@
 import type { RootState } from "./store";
 import { selectSavedCount, selectSavedIds } from "./savedOpportunitiesSlice";
-import {
-  selectRecentlyViewed,
-  selectRecentlyViewedCount,
-} from "./recentlyViewedSlice";
+import { selectRecentlyViewed, selectRecentlyViewedCount } from "./recentlyViewedSlice";
 
 export function selectTotalActivityCount(state: RootState) {
   return selectSavedCount(state) + selectRecentlyViewedCount(state);
@@ -15,6 +12,7 @@ export function selectHasAnyActivity(state: RootState) {
 
 export function selectRecentlyViewedNotSaved(state: RootState) {
   const savedIds = selectSavedIds(state);
-  const viewed = selectRecentlyViewed(state);
-  return viewed.filter((entry) => !savedIds.includes(entry.id));
+  return selectRecentlyViewed(state).filter(
+    (entry) => !savedIds.includes(entry.id),
+  );
 }

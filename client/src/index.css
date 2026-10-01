@@ -1036,3 +1036,36 @@ textarea {
   border-color: #b3413f;
   background-color: #fff4f4;
 }
+
+.recently-viewed-not-saved {
+  font-size: 11px;
+  color: #b3413f;
+  margin: 0;
+}
+
+.recently-viewed-not-saved {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.recently-viewed-not-saved p {
+  font-size: 11px;
+  color: #b3413f;
+  margin: 0;
+}
+.recently-viewed-save-all {
+  border: none;
+  background: none;
+  color: #4f46e5;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.navbar-api-summary {
+  color: #9295a6;
+  font-size: 11px;
+  margin: 0;
+}

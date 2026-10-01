@@ -12,13 +12,15 @@ interface RecentlyViewedState {
 }
 
 const MAX_RECENTLY_VIEWED = 5;
-
 export const RECENTLY_VIEWED_ENTRIES_KEY = "recentlyViewedEntries";
 
 function loadRecentlyViewed(): RecentlyViewedEntry[] {
+  const saved = localStorage.getItem(RECENTLY_VIEWED_ENTRIES_KEY);
+  if (!saved) {
+    return [];
+  }
   try {
-    const stored = localStorage.getItem(RECENTLY_VIEWED_ENTRIES_KEY);
-    return stored ? JSON.parse(stored) : [];
+    return JSON.parse(saved);
   } catch {
     return [];
   }
