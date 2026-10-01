@@ -11,7 +11,11 @@ export interface Post {
   liked: boolean;
 }
 
-export type OpportunityType = "job" | "internship" | "scholarship" | "volunteer";
+export type OpportunityType =
+  | "job"
+  | "internship"
+  | "scholarship"
+  | "volunteer";
 export type WorkMode = "remote" | "hybrid" | "on-site";
 export type ExperienceLevel = "entry" | "junior" | "mid" | "any";
 
@@ -37,4 +41,10 @@ export interface AppNotification {
   id: number;
   message: string;
   tone: NotificationTone;
+}
+
+export interface ApiHealth {
+  status: string;
+  opportunities: number;
+  posts: number;
 }

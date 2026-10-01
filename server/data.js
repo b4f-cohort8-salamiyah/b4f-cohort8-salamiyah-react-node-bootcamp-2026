@@ -324,7 +324,16 @@ export const initialOpportunities = [
     type: "job",
     workMode: "remote",
     location: "Remote (Worldwide)",
-    skills: ["React", "CSS", "Design Systems", "Accessibility", "TypeScript", "Figma", "Responsive Design", "Animation"],
+    skills: [
+      "React",
+      "CSS",
+      "Design Systems",
+      "Accessibility",
+      "TypeScript",
+      "Figma",
+      "Responsive Design",
+      "Animation",
+    ],
     description:
       "Meridian Studio is a small design-led product agency. We're hiring a UI engineer who genuinely cares about spacing, typography, and motion — someone who can turn a rough Figma file into production code without losing the design intent.",
     deadline: "2026-10-10",

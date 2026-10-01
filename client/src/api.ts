@@ -1,8 +1,9 @@
-import type { Opportunity, Post, PostCategory } from "./types";
+import type { ApiHealth, Opportunity, Post, PostCategory } from "./types";
 
 const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
-const Api_Health = "/api/health";
+const HEALTH_URL = "/api/health";
+
 async function readErrorMessage(
   response: Response,
   fallback: string,
@@ -107,18 +108,12 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
   return (await response.json()) as Opportunity;
 }
 
-export type ApiHealth = {
-  status: "ok";
-  opportunities: number;
-  posts: number;
-};
-
 export async function fetchApiHealth(): Promise<ApiHealth> {
-  const response = await fetch(Api_Health);
+  const response = await fetch(HEALTH_URL);
 
   if (!response.ok) {
     throw new Error(
-      await readErrorMessage(response, "Could not load API health."),
+      await readErrorMessage(response, "Could not reach the API."),
     );
   }
 
