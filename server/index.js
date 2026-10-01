@@ -9,7 +9,16 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { initialPosts, initialOpportunities } from "./data.js";
+import { initialPosts } from "./data.js";
+import { opportunities } from "./store.js";
+import { delay } from "./utils.js";
+import {
+  applyToOpportunity,
+  getAllOpportunities,
+  getOpportunitiesById,
+  getOpportunitiesByType,
+} from "./controllers/opportunities.js";
+import opportunitiesRouter from "./routes/opportunities.js";
 
 dotenv.config();
 
@@ -24,7 +33,6 @@ app.use((req, res, next) => {
 });
 
 let posts = initialPosts;
-let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
@@ -33,9 +41,15 @@ const ALLOWED_OPPORTUNITIES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// ---------- Health ----------
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  });
+});
 
 // ---------- Community ----------
 
@@ -131,78 +145,7 @@ app.patch("/api/posts/:id", (req, res) => {
 });
 
 // ---------- Opportunities ----------
-
-app.get("/api/opportunities", async (req, res) => {
-  await delay(350);
-
-  res.json(opportunities);
-});
-
-//STRETCH
-app.get("/api/opportunities/type/:type", async (req, res) => {
-  const type = req.params.type;
-  if (typeof type !== "string" || !ALLOWED_OPPORTUNITIES.includes(type)) {
-    return res.status(400).json({
-      error: `Opportunities is  must be one of: ${ALLOWED_OPPORTUNITIES.join(", ")}.`,
-    });
-  }
-  const opportunity = opportunities.filter(
-    (candidate) => candidate.type === type,
-  );
-  res.status(200).json(opportunity);
-});
-
-app.get("/api/opportunities/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const opportunity = opportunities.find((candidate) => candidate.id === id);
-
-  if (!opportunity) {
-    return res
-      .status(404)
-      .json({ error: `No opportunity found with id ${id}.` });
-  }
-
-  res.json(opportunity);
-});
-
-app.patch("/api/opportunities/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const { applied } = req.body ?? {};
-
-  if (applied !== true) {
-    return res
-      .status(400)
-      .json({ error: "applied is required and must be true." });
-  }
-
-  const opportunity = opportunities.find((candidate) => candidate.id === id);
-
-  if (!opportunity) {
-    return res
-      .status(404)
-      .json({ error: `No opportunity found with id ${id}.` });
-  }
-
-  if (opportunity.applied) {
-    return res
-      .status(409)
-      .json({ error: "You have already applied to this opportunity." });
-  }
-
-  opportunity.applied = true;
-
-  res.json(opportunity);
-});
-//CORE
-app.get("/api/health", async (req, res) => {
-  let opportunitiesCount = opportunities.length;
-  let postsCount = posts.length;
-  res.status(200).json({
-    status: "ok",
-    opportunities: opportunitiesCount,
-    posts: postsCount,
-  });
-});
+app.use("/api/opportunities", opportunitiesRouter);
 
 app.listen(PORT, () => {
   console.log(`B4F Hub local API running at http://localhost:${PORT}`);

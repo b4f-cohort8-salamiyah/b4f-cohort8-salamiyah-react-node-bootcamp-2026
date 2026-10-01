@@ -4,24 +4,26 @@ import { fetchApiHealth } from "../api";
 import type { ApiHealth } from "../api";
 import { selectSavedCount } from "../store/savedOpportunitiesSlice";
 import { useAppSelector } from "../store/hooks";
+import { useEffect, useState } from "react";
+import { fetchApiHealth } from "../api";
 
 function Navbar() {
   const savedCount = useAppSelector(selectSavedCount);
-  const [health, setHealth] = useState<ApiHealth | null>(null);
-
-  useEffect(() => {
-    fetchApiHealth()
-      .then((data) => {
-        setHealth(data);
-      })
-      .catch(() => {
-        // This summary is optional; keep it hidden if the request fails.
-      });
-  }, []);
+  const [apiSummary, setApiSummary] = useState<string | null>(null);
 
   function navLinkClassName({ isActive }: { isActive: boolean }) {
     return isActive ? "nav-link nav-link-active" : "nav-link";
   }
+
+  useEffect(() => {
+    fetchApiHealth()
+      .then((health) => {
+        setApiSummary(
+          `API: ${health.opportunities} opportunities · ${health.posts} posts`,
+        );
+      })
+      .catch();
+  }, []);
 
   return (
     <header className="navbar">
@@ -32,6 +34,7 @@ function Navbar() {
       <p className="navbar-tagline">
         Community &amp; Opportunities for B4F trainees and alumni
       </p>
+      {apiSummary && <p className="navbar-api-summary">{apiSummary}</p>}
 
       {health !== null && (
         <p className="navbar-tagline">
