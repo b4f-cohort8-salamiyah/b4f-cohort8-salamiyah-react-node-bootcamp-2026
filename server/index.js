@@ -14,6 +14,7 @@ import { initialPosts, initialOpportunities } from "./data.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 3001;
+const OpportunityType = ["job", "internship", "scholarship", "volunteer"];
 
 const app = express();
 app.use(express.json());
@@ -138,6 +139,16 @@ app.get("/api/opportunities", async (req, res) => {
   res.json(opportunities);
 });
 
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const type = req.params.type;
+  if (!OpportunityType.includes(type))
+    return res.status(400).json("this isn't a real type at all.");
+  const matched = opportunities.filter(
+    (opportunity) => opportunity.type === type,
+  );
+  res.status(200).json(matched);
+});
+
 app.get("/api/opportunities/:id", (req, res) => {
   const id = Number(req.params.id);
   const opportunity = opportunities.find((candidate) => candidate.id === id);
@@ -178,6 +189,16 @@ app.patch("/api/opportunities/:id", (req, res) => {
   opportunity.applied = true;
 
   res.json(opportunity);
+});
+
+app.get("/api/health", (req, res) => {
+  const opportunitiesCount = opportunities.length;
+  const postsCount = posts.length;
+  res.json({
+    status: "OK",
+    opportunities: opportunitiesCount,
+    posts: postsCount,
+  });
 });
 
 app.listen(PORT, () => {
