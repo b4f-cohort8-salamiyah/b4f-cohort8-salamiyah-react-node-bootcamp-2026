@@ -36,8 +36,6 @@ let posts = initialPosts;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
-//STRETCH
-const ALLOWED_OPPORTUNITIES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
 
