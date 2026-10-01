@@ -11,9 +11,18 @@ export interface Post {
   liked: boolean;
 }
 
-export type OpportunityType = "job" | "internship" | "scholarship" | "volunteer";
+export type OpportunityType =
+  | "job"
+  | "internship"
+  | "scholarship"
+  | "volunteer";
 export type WorkMode = "remote" | "hybrid" | "on-site";
 export type ExperienceLevel = "entry" | "junior" | "mid" | "any";
+export type ApiHealth = {
+  status: string;
+  opportunities: number;
+  posts: number;
+};
 
 export interface Opportunity {
   id: number;

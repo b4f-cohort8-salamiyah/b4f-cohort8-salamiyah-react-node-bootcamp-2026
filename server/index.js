@@ -30,6 +30,7 @@ let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
+const ALLOWED_OPPORTUNITY_TYPES = ["job","internship","scholarship", "volunteer",];
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -128,12 +129,34 @@ app.patch("/api/posts/:id", (req, res) => {
   res.json(post);
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    opportunities: opportunities.length,
+    posts: posts.length,
+  });
+});
+
 // ---------- Opportunities ----------
+
 
 app.get("/api/opportunities", async (req, res) => {
   await delay(350);
-
+  
   res.json(opportunities);
+});
+
+app.get("/api/opportunities/type/:type", (req, res) => {
+  const {type} = req.params;
+   if (!ALLOWED_OPPORTUNITY_TYPES.includes(type)) {
+    return res.status(400).json({
+      error: `type must be one of: ${ALLOWED_OPPORTUNITY_TYPES.join(", ")}.`,
+    });
+  }
+  const filteredOpportunities = opportunities.filter(
+    (opportunity) => opportunity.type === type,
+  );
+  res.json(filteredOpportunities);
 });
 
 app.get("/api/opportunities/:id", (req, res) => {

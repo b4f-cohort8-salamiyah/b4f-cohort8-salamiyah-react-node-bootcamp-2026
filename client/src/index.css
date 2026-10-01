@@ -1063,3 +1063,10 @@ textarea {
   padding: 0;
   text-decoration: underline;
 }
+
+.navbar-api-health{
+   font-size: 12px;
+  font-weight: 400;
+  color: #6b7089;
+  margin: 0;
+}
