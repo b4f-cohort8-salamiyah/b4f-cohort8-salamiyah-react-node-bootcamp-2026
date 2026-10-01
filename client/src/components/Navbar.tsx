@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { fetchApiHealth } from "../api";
-import type { ApiHealth } from "../api";
 import { selectSavedCount } from "../store/savedOpportunitiesSlice";
 import { useAppSelector } from "../store/hooks";
 import { useEffect, useState } from "react";
@@ -35,12 +32,6 @@ function Navbar() {
         Community &amp; Opportunities for B4F trainees and alumni
       </p>
       {apiSummary && <p className="navbar-api-summary">{apiSummary}</p>}
-
-      {health !== null && (
-        <p className="navbar-tagline">
-          API: {health.opportunities} opportunities · {health.posts} posts
-        </p>
-      )}
 
       <nav className="navbar-links">
         <NavLink to="/" end className={navLinkClassName}>
