@@ -22,6 +22,7 @@ function App() {
             path="/opportunities/:id"
             element={<OpportunityDetailPage />}
           />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
