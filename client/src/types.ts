@@ -43,7 +43,7 @@ export interface AppNotification {
   tone: NotificationTone;
 }
 
-export interface apiHealth {
+export interface ApiHealth {
   status: string;
   opportunities: number;
   posts: number;
