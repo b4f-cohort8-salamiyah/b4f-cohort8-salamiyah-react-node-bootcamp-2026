@@ -14,7 +14,6 @@ import { initialPosts, initialOpportunities } from "./data.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 3001;
-const OpportunityType = ["job", "internship", "scholarship", "volunteer"];
 
 const app = express();
 app.use(express.json());
@@ -29,6 +28,7 @@ let opportunities = initialOpportunities;
 let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 const ALLOWED_CATEGORIES = ["announcement", "event", "community", "resource"];
+const ALLOWED_TYPES = ["job", "internship", "scholarship", "volunteer"];
 const MIN_CONTENT_LENGTH = 3;
 const MAX_CONTENT_LENGTH = 2000;
 
@@ -141,7 +141,7 @@ app.get("/api/opportunities", async (req, res) => {
 
 app.get("/api/opportunities/type/:type", (req, res) => {
   const type = req.params.type;
-  if (!OpportunityType.includes(type))
+  if (!ALLOWED_TYPES.includes(type))
     return res.status(400).json("this isn't a real type at all.");
   const matched = opportunities.filter(
     (opportunity) => opportunity.type === type,
