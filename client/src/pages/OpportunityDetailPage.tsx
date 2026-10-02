@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -32,13 +36,32 @@ function OpportunityDetailPage() {
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
+  const [reportReason, setReportReason] = useState("");
+  const [isReporting, setIsReporting] = useState(false);
+
+  const handleReport = async () => {
+    if (!opportunity || !reportReason.trim()) return;
+
+    setIsReporting(true);
+    try {
+      await reportOpportunity(opportunity.id, reportReason);
+      notify("Report submitted successfully.", "success");
+      setReportReason("");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not submit your report.";
+      notify(message, "error");
+    } finally {
+      setIsReporting(false);
+    }
+  };
+
   async function load() {
     setIsLoading(true);
     setHasError(false);
     try {
-      // const opportunities = await fetchOpportunities();
-      // const match = opportunities.find((el) => String(el.id) === id) ?? null;
-
       const match = id ? await fetchOpportunityById(Number(id)) : null;
 
       if (match) {
@@ -153,6 +176,63 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+
+            <div
+              style={{
+                marginTop: "2rem",
+                padding: "1.5rem",
+                border: "1px solid #eee",
+                borderRadius: "8px",
+                backgroundColor: "#fafafa",
+              }}
+            >
+              <h4
+                style={{
+                  marginTop: 0,
+                  marginBottom: "0.75rem",
+                  fontSize: "1rem",
+                  color: "#333",
+                }}
+              >
+                Report an issue
+              </h4>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                <input
+                  type="text"
+                  placeholder="Why are you reporting this?"
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  disabled={isReporting}
+                  style={{
+                    flex: "1 1 200px",
+                    padding: "0.5rem",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                    fontSize: "0.9rem",
+                  }}
+                />
+                <button
+                  onClick={handleReport}
+                  disabled={!reportReason.trim() || isReporting}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    borderRadius: "4px",
+                    border: "none",
+                    backgroundColor:
+                      !reportReason.trim() || isReporting ? "#ccc" : "#e53e3e",
+                    color: "white",
+                    fontWeight: "bold",
+                    cursor:
+                      !reportReason.trim() || isReporting
+                        ? "not-allowed"
+                        : "pointer",
+                    transition: "background-color 0.2s",
+                  }}
+                >
+                  {isReporting ? "Reporting..." : "Report"}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

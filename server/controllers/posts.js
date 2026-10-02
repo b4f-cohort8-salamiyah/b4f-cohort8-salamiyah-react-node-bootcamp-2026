@@ -1,7 +1,11 @@
+import {
+  posts,
+  ALLOWED_CATEGORIES,
+  MIN_CONTENT_LENGTH,
+  MAX_CONTENT_LENGTH,
+  claimNextPostId,
+} from "../store.js";
 import { delay } from "../utils.js";
-import { claimNextPostId, posts } from "../store.js";
-import { ALLOWED_CATEGORIES } from "../store.js";
-import { MAX_CONTENT_LENGTH, MIN_CONTENT_LENGTH } from "../store.js";
 
 export async function getAllPosts(req, res) {
   await delay(350);
@@ -12,8 +16,8 @@ export async function getAllPosts(req, res) {
   res.json(sorted);
 }
 
-export function getPostsById(req, res) {
-  const id = claimNextPostId();
+export function getPostById(req, res) {
+  const id = Number(req.params.id);
   const post = posts.find((candidate) => candidate.id === id);
   if (!post) {
     return res.status(404).json({ error: `No post found with id ${id}.` });
@@ -21,7 +25,7 @@ export function getPostsById(req, res) {
   res.json(post);
 }
 
-export function creatPost(req, res) {
+export function createPost(req, res) {
   const { content, category } = req.body ?? {};
 
   if (typeof content !== "string") {
@@ -51,7 +55,7 @@ export function creatPost(req, res) {
   }
 
   const newPost = {
-    id: nextPostId,
+    id: claimNextPostId(),
     author: "You",
     avatar: "YOU",
     category: category,
@@ -65,4 +69,31 @@ export function creatPost(req, res) {
   posts = [newPost, ...posts];
 
   res.status(201).json(newPost);
+}
+
+export function toggleLikePost(req, res) {
+  const id = Number(req.params.id);
+  const { liked } = req.body ?? {};
+
+  if (typeof liked !== "boolean") {
+    return res
+      .status(400)
+      .json({ error: "liked is required and must be a boolean." });
+  }
+
+  const post = posts.find((candidate) => candidate.id === id);
+
+  if (!post) {
+    return res.status(404).json({ error: `No post found with id ${id}.` });
+  }
+
+  if (liked && !post.liked) {
+    post.liked = true;
+    post.likes += 1;
+  } else if (!liked && post.liked) {
+    post.liked = false;
+    post.likes -= 1;
+  }
+
+  res.json(post);
 }

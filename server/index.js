@@ -9,10 +9,11 @@
 
 import express from "express";
 import dotenv from "dotenv";
-
-import { opportunities, posts } from "./store.js";
+import { opportunities } from "./store.js";
 import opportunitiesRouter from "./routes/opportunities.js";
 import postsRouter from "./routes/posts.js";
+import healthRouter from "./routes/health.js";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3001;
@@ -26,19 +27,13 @@ app.use((req, res, next) => {
 });
 
 // ---------- Health ----------
-
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "ok",
-    opportunities: opportunities.length,
-    posts: posts.length,
-  });
-});
-
+app.use("/api/health", healthRouter);
 // ---------- Community ----------
+
 app.use("/api/posts", postsRouter);
 
 // ---------- Opportunities ----------
+
 app.use("/api/opportunities", opportunitiesRouter);
 
 app.listen(PORT, () => {

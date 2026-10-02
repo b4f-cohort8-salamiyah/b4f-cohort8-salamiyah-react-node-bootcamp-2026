@@ -64,29 +64,29 @@ export function applyToOpportunity(req, res) {
   res.json(opportunity);
 }
 
-export function likePost(req, res) {
-  const id = Number(req.params.id);
-  const { liked } = req.body ?? {};
+const reports = [];
+let nextReportId = 1;
 
-  if (typeof liked !== "boolean") {
+export const reportOpportunity = (req, res) => {
+  const opportunityId = Number(req.params.id);
+  const { reason } = req.body ?? {};
+  const opportunityExist = opportunities.some(
+    (opp) => opp.id === opportunityId,
+  );
+  if (!opportunityExist) {
+    return res.status(404).json({ error: "Opportunity not found" });
+  }
+  if (typeof reason !== "string" || reason.trim().length < 3) {
     return res
       .status(400)
-      .json({ error: "liked is required and must be a boolean." });
+      .json({ error: "Reason must be a string of at least 3 characters" });
   }
-
-  const post = posts.find((candidate) => candidate.id === id);
-
-  if (!post) {
-    return res.status(404).json({ error: `No post found with id ${id}.` });
-  }
-
-  if (liked && !post.liked) {
-    post.liked = true;
-    post.likes += 1;
-  } else if (!liked && post.liked) {
-    post.liked = false;
-    post.likes -= 1;
-  }
-
-  res.json(post);
-}
+  const newReport = {
+    id: nextReportId++,
+    opportunityId: opportunityId,
+    reason: reason.trim(),
+    createdAt: new Date().toISOString(),
+  };
+  reports.push(newReport);
+  res.status(201).json(newReport);
+};

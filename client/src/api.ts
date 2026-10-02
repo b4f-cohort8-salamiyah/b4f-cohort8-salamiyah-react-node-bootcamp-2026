@@ -119,3 +119,26 @@ export async function fetchApiHealth(): Promise<ApiHealth> {
 
   return (await response.json()) as ApiHealth;
 }
+
+export type OpportunityReport = {
+  id: number;
+  opportunityId: number;
+  reason: string;
+  createdAt: string;
+};
+
+export const reportOpportunity = async (
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> => {
+  const res = await fetch(`/api/opportunities/${id}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to report opportunity");
+  }
+
+  return res.json();
+};
