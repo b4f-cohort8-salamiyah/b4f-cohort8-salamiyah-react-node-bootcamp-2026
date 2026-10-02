@@ -41,6 +41,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/posts", postsRouter);
 
 // ---------- Opportunities ----------
+
 app.use("/api/opportunities", opportunitiesRouter);
 
 app.listen(PORT, () => {

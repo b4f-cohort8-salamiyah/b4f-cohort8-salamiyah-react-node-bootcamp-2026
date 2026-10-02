@@ -58,7 +58,7 @@ export function composePost(req, res) {
   }
 
   const newPost = {
-    id: nextPostId,
+    id: claimNextPostId(),
     author: "You",
     avatar: "YOU",
     category: category,
