@@ -63,3 +63,30 @@ export function applyToOpportunity(req, res) {
 
   res.json(opportunity);
 }
+
+export function likePost(req, res) {
+  const id = Number(req.params.id);
+  const { liked } = req.body ?? {};
+
+  if (typeof liked !== "boolean") {
+    return res
+      .status(400)
+      .json({ error: "liked is required and must be a boolean." });
+  }
+
+  const post = posts.find((candidate) => candidate.id === id);
+
+  if (!post) {
+    return res.status(404).json({ error: `No post found with id ${id}.` });
+  }
+
+  if (liked && !post.liked) {
+    post.liked = true;
+    post.likes += 1;
+  } else if (!liked && post.liked) {
+    post.liked = false;
+    post.likes -= 1;
+  }
+
+  res.json(post);
+}
