@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -31,6 +35,11 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+
+  function handleReportReasonChange(event: ChangeEvent<HTMLInputElement>) {
+    setReportReason(event.target.value);
+  }
 
   async function load() {
     setIsLoading(true);
@@ -51,6 +60,22 @@ function OpportunityDetailPage() {
       console.log(error);
       setHasError(true);
       setIsLoading(false);
+    }
+  }
+
+  async function handleReport(event: ChangeEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const reason = reportReason.trim();
+    if (!opportunity) {
+      return;
+    }
+    try {
+      const report = await reportOpportunity(opportunity.id, reason);
+      notify(`Reported ${report.reason} with id: ${report.id}`, "success");
+      setReportReason("");
+    } catch (error) {
+      notify(String(error), "error");
     }
   }
 
@@ -153,6 +178,21 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+
+            <form className="report-composer" onSubmit={handleReport}>
+              <input
+                placeholder="Write a report..."
+                className="report-composer-input"
+                value={reportReason}
+                onChange={handleReportReasonChange}
+              />
+              <button
+                type="submit"
+                className={`report-button ${reportReason.length > 0 ? "" : " reporting"}`}
+              >
+                Report
+              </button>
+            </form>
           </div>
         )}
 

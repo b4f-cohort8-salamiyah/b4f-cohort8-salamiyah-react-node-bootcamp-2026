@@ -5,7 +5,7 @@ import {
   MAX_CONTENT_LENGTH,
   MIN_CONTENT_LENGTH,
   nextPostId,
-  c,
+  claimNextPostId,
 } from "../store.js";
 
 export async function getAllPosts(req, res) {

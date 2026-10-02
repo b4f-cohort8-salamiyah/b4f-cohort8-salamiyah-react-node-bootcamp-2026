@@ -1,5 +1,15 @@
 import { delay } from "../utils.js";
-import { opportunities, ALLOWED_TYPES } from "../store.js";
+import { opportunities, ALLOWED_TYPES, MIN_REASON_LENGTH } from "../store.js";
+
+let reports = [
+  { id: 0, opportunityid: 100, reason: "initial report", createAt: "now" },
+];
+let nextReportId = Math.max(...reports.map((report) => report.id)) + 1;
+function claimNextReportId() {
+  const id = Math.max(...reports.map((report) => report.id)) + 1;
+  nextReportId += 1;
+  return id;
+}
 
 export async function getAllOpportunities(req, res) {
   await delay(350);
@@ -62,4 +72,44 @@ export function applyToOpportunity(req, res) {
   opportunity.applied = true;
 
   res.json(opportunity);
+}
+
+export function reportOpportunity(req, res) {
+  const { reason } = req.body ?? {};
+  const id = Number(req.params.id);
+
+  const opportunity = opportunities.find((candidate) => candidate.id === id);
+
+  if (!opportunity) {
+    return res
+      .status(404)
+      .json({ error: `No opportunity found with id ${id}.` });
+  }
+
+  if (typeof reason !== "string") {
+    return res
+      .status(400)
+      .json({ error: "reason is required and must be a string." });
+  }
+
+  const trimmedReason = reason.trim();
+
+  if (trimmedReason.length < MIN_REASON_LENGTH) {
+    return res.status(400).json({
+      error: `reason must be at least ${MIN_REASON_LENGTH} characters.`,
+    });
+  }
+
+  const newReport = {
+    id: claimNextReportId(),
+    opportunityid: id,
+    reason: trimmedReason,
+    createAt: new Date().toISOString(),
+  };
+
+  nextReportId += 1;
+
+  reports = [newReport, ...reports];
+
+  res.status(201).json(newReport);
 }

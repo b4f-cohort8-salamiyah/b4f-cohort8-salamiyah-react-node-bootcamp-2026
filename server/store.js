@@ -4,6 +4,8 @@ export const opportunities = initialOpportunities;
 export const posts = initialPosts;
 export const ALLOWED_TYPES = ["job", "internship", "scholarship", "volunteer"];
 
+export const MIN_REASON_LENGTH = 3;
+
 export const ALLOWED_CATEGORIES = [
   "announcement",
   "event",
@@ -14,7 +16,7 @@ export const ALLOWED_CATEGORIES = [
 export const MIN_CONTENT_LENGTH = 3;
 export const MAX_CONTENT_LENGTH = 2000;
 
-let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
+export let nextPostId = Math.max(...posts.map((post) => post.id)) + 1;
 
 export function claimNextPostId() {
   const id = nextPostId;
