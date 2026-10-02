@@ -30,12 +30,6 @@ function Navbar() {
       </div>
       <p className="navbar-tagline">
         Community &amp; Opportunities for B4F trainees and alumni
-        {apiHealth?.status == "OK" && (
-          <p className="navbar-tagline">
-            Api: {apiHealth?.opportunities} opportunities . {apiHealth?.posts}{" "}
-            posts
-          </p>
-        )}
       </p>
       {apiSummary && <p className="navbar-api-summary">{apiSummary}</p>}
 
