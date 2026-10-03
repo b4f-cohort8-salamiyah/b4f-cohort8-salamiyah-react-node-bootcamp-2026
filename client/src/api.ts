@@ -113,7 +113,7 @@ export async function fetchApiHealth(): Promise<ApiHealth> {
 
   if (!response.ok) {
     throw new Error(
-      await readErrorMessage(response, "Could not load API health."),
+      await readErrorMessage(response, "Could not reach the API."),
     );
   }
 
