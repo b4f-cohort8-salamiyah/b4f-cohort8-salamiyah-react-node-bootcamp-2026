@@ -1,4 +1,10 @@
-import type { ApiHealth, Opportunity, Post, PostCategory } from "./types";
+import type {
+  ApiHealth,
+  Opportunity,
+  OpportunityReport,
+  Post,
+  PostCategory,
+} from "./types";
 
 const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
@@ -118,4 +124,23 @@ export async function fetchApiHealth(): Promise<ApiHealth> {
   }
 
   return (await response.json()) as ApiHealth;
+}
+
+export async function reportOpportunity(
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> {
+  const response = await fetch(`${OPPORTUNITIES_URL}/${id}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not report this opportunity."),
+    );
+  }
+
+  return (await response.json()) as OpportunityReport;
 }

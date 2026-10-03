@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -31,6 +35,8 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
@@ -51,6 +57,26 @@ function OpportunityDetailPage() {
       console.log(error);
       setHasError(true);
       setIsLoading(false);
+    }
+  }
+
+  async function handleReport() {
+    if (!opportunity || reportReason.trim().length < 3) return;
+
+    setIsReporting(true);
+
+    try {
+      await reportOpportunity(opportunity.id, reportReason.trim());
+      setReportReason("");
+      notify("Report submitted.", "success");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not report this opportunity.";
+      notify(message, "error");
+    } finally {
+      setIsReporting(false);
     }
   }
 
@@ -153,6 +179,22 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+            <div className="opportunity-report-form">
+              <input
+                type="text"
+                aria-label="Reason for reporting this opportunity"
+                placeholder="Why are you reporting this listing?"
+                value={reportReason}
+                onChange={(event) => setReportReason(event.target.value)}
+              />
+              <button
+                type="button"
+                onClick={handleReport}
+                disabled={reportReason.trim().length < 3 || isReporting}
+              >
+                {isReporting ? "Reporting..." : "Report"}
+              </button>
+            </div>
           </div>
         )}
 
