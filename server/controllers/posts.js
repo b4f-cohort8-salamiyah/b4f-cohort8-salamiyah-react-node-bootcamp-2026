@@ -65,7 +65,6 @@ export function createPost(req, res) {
     liked: false,
   };
 
-  nextPostId += 1;
   posts = [newPost, ...posts];
 
   res.status(201).json(newPost);
