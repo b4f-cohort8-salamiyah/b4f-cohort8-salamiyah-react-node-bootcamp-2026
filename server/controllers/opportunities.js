@@ -63,3 +63,38 @@ export function applyToOpportunity(req, res) {
 
   res.json(opportunity);
 }
+
+const reports = [];
+
+export function reportOpportunity(req, res) {
+  const id = Number(req.params.id);
+  const { reason } = req.body ?? {};
+
+  // First: Check if the opportunity exists
+  const opportunity = opportunities.find((candidate) => candidate.id === id);
+
+  if (!opportunity) {
+    return res.status(404).json({
+      error: `No opportunity found with id ${id}.`,
+    });
+  }
+
+  // Second: Validate the reason
+  if (typeof reason !== "string" || reason.trim().length < 3) {
+    return res.status(400).json({
+      error: "Reason must be at least 3 characters long.",
+    });
+  }
+
+  // Third: Create the report
+  const report = {
+    id: reports.length + 1,
+    opportunityId: opportunity.id,
+    reason: reason.trim(),
+    createdAt: new Date().toISOString(),
+  };
+
+  reports.push(report);
+
+  res.status(201).json(report);
+}
