@@ -47,3 +47,9 @@ export interface ApiHealth {
   opportunities: number;
   posts: number;
 }
+export interface OpportunityReport {
+  id: number;
+  opportunityId: number;
+  reason: string;
+  createdAt: string;
+}

@@ -6,6 +6,8 @@ export async function getAllOpportunities(req, res) {
   res.json(opportunities);
 }
 
+const reports = [];
+let nextReportId = 1;
 export function getOpportunitiesById(req, res) {
   const id = Number(req.params.id);
   const opportunity = opportunities.find((candidate) => candidate.id === id);
@@ -62,4 +64,37 @@ export function applyToOpportunity(req, res) {
   opportunity.applied = true;
 
   res.json(opportunity);
+}
+
+export function reportOpportunity(req, res) {
+  const id = Number(req.params.id);
+  const { reason } = req.body ?? {};
+
+
+  const opportunity = opportunities.find((candidate) => candidate.id === id);
+
+  if (!opportunity) {
+    return res
+      .status(404)
+      .json({ error: `No opportunity found with id ${id}.` });
+  }
+
+
+  if (typeof reason !== "string" || reason.trim().length < 3) {
+    return res.status(400).json({
+      error: "reason is required and must be at least 3 characters.",
+    });
+  }
+
+  
+  const report = {
+    id: nextReportId++,
+    opportunityId: opportunity.id,
+    reason: reason.trim(),
+    createdAt: new Date().toISOString(),
+  };
+
+  reports.push(report);
+
+  res.status(201).json(report);
 }

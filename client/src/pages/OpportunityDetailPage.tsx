@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import { applyToOpportunity, fetchOpportunityById, reportOpportunity } from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -31,6 +31,8 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
@@ -73,6 +75,23 @@ function OpportunityDetailPage() {
       setIsApplying(false);
     }
   }
+  async function handleReport() {
+  if (!opportunity) return;
+
+  setIsReporting(true);
+
+  try {
+    await reportOpportunity(opportunity.id, reportReason.trim());
+    notify("Thanks — your report was sent.", "success");
+    setReportReason("");
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Could not submit your report.";
+    notify(message, "error");
+  } finally {
+    setIsReporting(false);
+  }
+}
 
   function formatDeadline(dateString: string): string {
     const date = new Date(dateString);
@@ -157,6 +176,28 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+            <div className="report-section">
+  <label htmlFor="report-reason" className="report-label">
+    Report an issue
+  </label>
+  <input
+    id="report-reason"
+    type="text"
+    className="report-input"
+    placeholder="Describe the problem…"
+    value={reportReason}
+    onChange={(e) => setReportReason(e.target.value)}
+    disabled={isReporting}
+  />
+  <button
+    type="button"
+    className="report-button"
+    onClick={handleReport}
+    disabled={!reportReason.trim() || isReporting}
+  >
+    {isReporting ? "Sending…" : "Report"}
+  </button>
+</div>
           </div>
         )}
 
