@@ -1063,13 +1063,37 @@ textarea {
   padding: 0;
   text-decoration: underline;
 }
-.navbar-health {
-  color: #696f89;
-  font-size: 11.5px;
-  letter-spacing: 0.2px;
+
+.navbar-api-summary {
+  color: #9295a6;
+  font-size: 11px;
+  margin: 0;
 }
-.navbar-text {
+
+.report-section {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.report-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.report-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #444;
+  color: white;
+  cursor: pointer;
+}
+
+.report-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

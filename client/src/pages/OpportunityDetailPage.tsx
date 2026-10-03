@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -31,6 +35,8 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
@@ -71,6 +77,20 @@ function OpportunityDetailPage() {
       notify(message, "error");
     } finally {
       setIsApplying(false);
+    }
+  }
+
+  async function handleReport() {
+    if (!opportunity || !reportReason.trim()) return;
+    try {
+      setIsReporting(true);
+      await reportOpportunity(opportunity.id, reportReason);
+      setReportReason("");
+      notify("Report submitted. Thanks!", "success");
+    } catch (err) {
+      notify(err instanceof Error ? err.message : "Report failed.", "error");
+    } finally {
+      setIsReporting(false);
     }
   }
 
@@ -153,6 +173,23 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+
+            <div className="report-section">
+              <input
+                type="text"
+                value={reportReason}
+                onChange={(e) => setReportReason(e.target.value)}
+                placeholder="Report an issue with this listing..."
+                className="report-input"
+              />
+              <button
+                className="report-button"
+                onClick={handleReport}
+                disabled={!reportReason.trim() || isReporting}
+              >
+                {isReporting ? "Reporting..." : "Report"}
+              </button>
+            </div>
           </div>
         )}
 
