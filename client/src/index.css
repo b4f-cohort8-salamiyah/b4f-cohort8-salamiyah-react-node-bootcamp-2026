@@ -621,6 +621,12 @@ textarea {
   border-color: #c9cbe8;
 }
 
+.opportunity-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 .apply-button {
   background-color: #4f46e5;
   border: none;
@@ -630,7 +636,6 @@ textarea {
   font-size: 12.5px;
   font-weight: 700;
   padding: 8px 18px;
-  margin-left: auto;
 }
 
 .apply-button:hover:not(:disabled) {
@@ -643,6 +648,48 @@ textarea {
 }
 
 .apply-button:disabled {
+  cursor: not-allowed;
+}
+
+.report-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.report-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #e4e6f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  background-color: #ffffff;
+}
+
+.report-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.report-button {
+  background-color: #f0f1f9;
+  border: 1px solid #e4e6f0;
+  border-radius: 8px;
+  color: #4a4f6a;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+.report-button:hover:not(:disabled) {
+  border-color: #c9cbe8;
+}
+
+.report-button:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 

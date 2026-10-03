@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -31,6 +35,8 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
@@ -46,6 +52,7 @@ function OpportunityDetailPage() {
       }
 
       setOpportunity(match);
+      setReportReason("");
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -71,6 +78,27 @@ function OpportunityDetailPage() {
       notify(message, "error");
     } finally {
       setIsApplying(false);
+    }
+  }
+
+  async function handleReport() {
+    if (!opportunity) return;
+
+    const trimmedReason = reportReason.trim();
+    if (!trimmedReason) return;
+
+    setIsReporting(true);
+
+    try {
+      await reportOpportunity(opportunity.id, trimmedReason);
+      setReportReason("");
+      notify("Your report was submitted.", "success");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Could not submit your report.";
+      notify(message, "error");
+    } finally {
+      setIsReporting(false);
     }
   }
 
@@ -142,17 +170,37 @@ function OpportunityDetailPage() {
               </p>
             </div>
 
-            <button
-              className={`apply-button ${opportunity.applied ? "applied" : ""}`}
-              onClick={handleApply}
-              disabled={opportunity.applied || isApplying}
-            >
-              {opportunity.applied
-                ? "Applied"
-                : isApplying
-                  ? "Applying..."
-                  : "Apply"}
-            </button>
+            <div className="opportunity-actions">
+              <button
+                className={`apply-button ${opportunity.applied ? "applied" : ""}`}
+                onClick={handleApply}
+                disabled={opportunity.applied || isApplying}
+              >
+                {opportunity.applied
+                  ? "Applied"
+                  : isApplying
+                    ? "Applying..."
+                    : "Apply"}
+              </button>
+            </div>
+
+            <div className="report-form">
+              <input
+                type="text"
+                className="report-input"
+                value={reportReason}
+                onChange={(event) => setReportReason(event.target.value)}
+                placeholder="Tell us what is wrong with this listing"
+                aria-label="Report opportunity issue"
+              />
+              <button
+                className="report-button"
+                onClick={handleReport}
+                disabled={!reportReason.trim() || isReporting}
+              >
+                {isReporting ? "Reporting..." : "Report"}
+              </button>
+            </div>
           </div>
         )}
 

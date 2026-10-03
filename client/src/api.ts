@@ -4,6 +4,13 @@ const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
 const HEALTH_URL = "/api/health";
 
+export type OpportunityReport = {
+  id: number;
+  opportunityId: number;
+  reason: string;
+  createdAt: string;
+};
+
 async function readErrorMessage(
   response: Response,
   fallback: string,
@@ -106,6 +113,25 @@ export async function applyToOpportunity(id: number): Promise<Opportunity> {
   }
 
   return (await response.json()) as Opportunity;
+}
+
+export async function reportOpportunity(
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> {
+  const response = await fetch(`${OPPORTUNITIES_URL}/${id}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not submit your report."),
+    );
+  }
+
+  return (await response.json()) as OpportunityReport;
 }
 
 export async function fetchApiHealth(): Promise<ApiHealth> {
