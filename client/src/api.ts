@@ -1,4 +1,10 @@
-import type { ApiHealth, Opportunity, Post, PostCategory } from "./types";
+import type {
+  ApiHealth,
+  Opportunity,
+  Post,
+  PostCategory,
+  OpportunityReport,
+} from "./types";
 
 const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
@@ -36,8 +42,8 @@ export async function createPost(
 ): Promise<Post> {
   const response = await fetch(POSTS_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content, category }),
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({content, category}),
   });
 
   if (!response.ok) {
@@ -52,8 +58,8 @@ export async function createPost(
 export async function setPostLiked(id: number, liked: boolean): Promise<Post> {
   const response = await fetch(`${POSTS_URL}/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ liked }),
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({liked}),
   });
 
   if (!response.ok) {
@@ -95,8 +101,8 @@ export async function fetchOpportunityById(
 export async function applyToOpportunity(id: number): Promise<Opportunity> {
   const response = await fetch(`${OPPORTUNITIES_URL}/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ applied: true }),
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({applied: true}),
   });
 
   if (!response.ok) {
@@ -118,4 +124,25 @@ export async function fetchApiHealth(): Promise<ApiHealth> {
   }
 
   return (await response.json()) as ApiHealth;
+}
+
+export async function reportOpportunity(
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> {
+  const response = await fetch(`${OPPORTUNITIES_URL}/${id}/report`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({reason}),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not report this opportunity."),
+    );
+  }
+
+  return response.json();
 }

@@ -31,6 +31,8 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  // const [reportReason, setReportReason] = useState("");
+  // const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
@@ -86,6 +88,14 @@ function OpportunityDetailPage() {
   useEffect(() => {
     load();
   }, [id]);
+
+  // async function handleReport(reportReason: string) {
+  //   if (!reportReason.trim()) return;
+  //   try {
+  //   setIsReporting(true);
+  //   await reportOpportunity(opportunity.id, reportReason);
+  //   setReportReason("");
+  // }
 
   return (
     <section className="panel opportunity-detail-page">
