@@ -4,6 +4,33 @@ const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
 const HEALTH_URL = "/api/health";
 
+//challenge
+export type OpportunityReport = {
+  id: number;
+  opportunityId: number;
+  reason: string;
+  createdAt: string;
+};
+
+export async function reportOpportunity(
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> {
+  const response = await fetch(`${OPPORTUNITIES_URL}/${id}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not report this opportunity."),
+    );
+  }
+
+  return (await response.json()) as OpportunityReport;
+}
+
 async function readErrorMessage(
   response: Response,
   fallback: string,

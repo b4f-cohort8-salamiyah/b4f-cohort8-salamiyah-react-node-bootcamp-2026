@@ -9,7 +9,8 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { opportunities } from "./store.js";
+//core
+import healthRouter from "./routes/health.js";
 import opportunitiesRouter from "./routes/opportunities.js";
 import postsRouter from "./routes/posts.js";
 
@@ -25,15 +26,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// ---------- Health ----------
-
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "ok",
-    opportunities: opportunities.length,
-    posts: posts.length,
-  });
-});
+//core
+app.use("/api/health", healthRouter);
 
 // ---------- Community ----------
 

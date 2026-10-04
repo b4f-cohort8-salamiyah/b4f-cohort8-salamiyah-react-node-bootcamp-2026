@@ -872,6 +872,53 @@ textarea {
   gap: 14px;
 }
 
+/*challenge*/
+.opportunity-report {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #e4e6f0;
+  padding-top: 16px;
+  color: #4a4f6a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.report-input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #e4e6f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #4a4f6a;
+  background-color: #ffffff;
+}
+
+.report-input:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.report-button {
+  align-self: flex-end;
+  border: 1px solid #c9cbe8;
+  border-radius: 8px;
+  padding: 8px 18px;
+  color: #4f46e5;
+  background-color: #f0efff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-button:hover:not(:disabled) {
+  background-color: #e4e2ff;
+}
+
+.report-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .opportunity-detail-not-found {
   padding: 20px;
   display: flex;
