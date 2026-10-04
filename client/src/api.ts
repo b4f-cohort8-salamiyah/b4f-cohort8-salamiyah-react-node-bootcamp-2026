@@ -4,6 +4,13 @@ const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
 const HEALTH_URL = "/api/health";
 
+interface OpportunityReport {
+  id: number;
+  opportunityId: number;
+  reason: string;
+  createdAt: string;
+}
+
 async function readErrorMessage(
   response: Response,
   fallback: string,
@@ -118,4 +125,21 @@ export async function fetchApiHealth(): Promise<ApiHealth> {
   }
 
   return (await response.json()) as ApiHealth;
+}
+
+export async function reportOpportunity(
+  id: number,
+  reason: string,
+): Promise<OpportunityReport> {
+  const response = await fetch(`${OPPORTUNITIES_URL}/${id}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Could not submit this report."),
+    );
+  }
+  return (await response.json()) as OpportunityReport;
 }

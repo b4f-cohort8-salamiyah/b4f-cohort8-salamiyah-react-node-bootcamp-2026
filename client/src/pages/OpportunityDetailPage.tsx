@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Opportunity } from "../types";
-import { applyToOpportunity, fetchOpportunityById } from "../api";
+import {
+  applyToOpportunity,
+  fetchOpportunityById,
+  reportOpportunity,
+} from "../api";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useNotify } from "../context/NotificationContext";
@@ -32,13 +36,13 @@ function OpportunityDetailPage() {
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
+  const [reportReason, setReportReason] = useState("");
+  const [isReporting, setIsReporting] = useState(false);
+
   async function load() {
     setIsLoading(true);
     setHasError(false);
     try {
-      // const opportunities = await fetchOpportunities();
-      // const match = opportunities.find((el) => String(el.id) === id) ?? null;
-
       const match = id ? await fetchOpportunityById(Number(id)) : null;
 
       if (match) {
@@ -71,6 +75,26 @@ function OpportunityDetailPage() {
       notify(message, "error");
     } finally {
       setIsApplying(false);
+    }
+  }
+
+  async function handleReport() {
+    if (!opportunity) return;
+
+    setIsReporting(true);
+
+    try {
+      await reportOpportunity(opportunity.id, reportReason);
+      setReportReason("");
+      notify("Thanks — this listing has been reported.", "success");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not submit this report.";
+      notify(message, "error");
+    } finally {
+      setIsReporting(false);
     }
   }
 
@@ -153,6 +177,23 @@ function OpportunityDetailPage() {
                   ? "Applying..."
                   : "Apply"}
             </button>
+
+            <div className="report-opportunity">
+              <input
+                type="text"
+                className="report-reason-input"
+                placeholder="Report an issue with this listing..."
+                value={reportReason}
+                onChange={(event) => setReportReason(event.target.value)}
+              />
+              <button
+                className="report-button"
+                onClick={handleReport}
+                disabled={isReporting || reportReason.trim().length === 0}
+              >
+                {isReporting ? "Reporting..." : "Report"}
+              </button>
+            </div>
           </div>
         )}
 
