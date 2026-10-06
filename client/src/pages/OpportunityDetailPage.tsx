@@ -35,6 +35,7 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+
   const [reportReason, setReportReason] = useState("");
   const [isReporting, setIsReporting] = useState(false);
 
@@ -42,9 +43,6 @@ function OpportunityDetailPage() {
     setIsLoading(true);
     setHasError(false);
     try {
-      // const opportunities = await fetchOpportunities();
-      // const match = opportunities.find((el) => String(el.id) === id) ?? null;
-
       const match = id ? await fetchOpportunityById(Number(id)) : null;
 
       if (match) {
@@ -84,18 +82,17 @@ function OpportunityDetailPage() {
   async function handleReport() {
     if (!opportunity) return;
 
-    const trimmedReason = reportReason.trim();
-    if (!trimmedReason) return;
-
     setIsReporting(true);
 
     try {
-      await reportOpportunity(opportunity.id, trimmedReason);
+      await reportOpportunity(opportunity.id, reportReason);
       setReportReason("");
-      notify("Your report was submitted.", "success");
+      notify("Thanks — this listing has been reported.", "success");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Could not submit your report.";
+        error instanceof Error
+          ? error.message
+          : "Could not submit this report.";
       notify(message, "error");
     } finally {
       setIsReporting(false);
@@ -170,33 +167,30 @@ function OpportunityDetailPage() {
               </p>
             </div>
 
-            <div className="opportunity-actions">
-              <button
-                className={`apply-button ${opportunity.applied ? "applied" : ""}`}
-                onClick={handleApply}
-                disabled={opportunity.applied || isApplying}
-              >
-                {opportunity.applied
-                  ? "Applied"
-                  : isApplying
-                    ? "Applying..."
-                    : "Apply"}
-              </button>
-            </div>
+            <button
+              className={`apply-button ${opportunity.applied ? "applied" : ""}`}
+              onClick={handleApply}
+              disabled={opportunity.applied || isApplying}
+            >
+              {opportunity.applied
+                ? "Applied"
+                : isApplying
+                  ? "Applying..."
+                  : "Apply"}
+            </button>
 
-            <div className="report-form">
+            <div className="report-opportunity">
               <input
                 type="text"
-                className="report-input"
+                className="report-reason-input"
+                placeholder="Report an issue with this listing..."
                 value={reportReason}
                 onChange={(event) => setReportReason(event.target.value)}
-                placeholder="Tell us what is wrong with this listing"
-                aria-label="Report opportunity issue"
               />
               <button
                 className="report-button"
                 onClick={handleReport}
-                disabled={!reportReason.trim() || isReporting}
+                disabled={isReporting || reportReason.trim().length === 0}
               >
                 {isReporting ? "Reporting..." : "Report"}
               </button>
