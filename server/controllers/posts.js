@@ -65,7 +65,7 @@ export function createPost(req, res) {
     liked: false,
   };
 
-  posts = [newPost, ...posts];
+  posts.unshift(newPost);
 
   res.status(201).json(newPost);
 }

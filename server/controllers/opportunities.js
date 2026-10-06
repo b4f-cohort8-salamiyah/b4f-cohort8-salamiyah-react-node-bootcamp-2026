@@ -72,31 +72,26 @@ export function reportOpportunity(req, res) {
   const opportunity = opportunities.find((candidate) => candidate.id === id);
 
   if (!opportunity) {
-    return res.status(404).json({ error: `No opportunity found with id ${id}.` });
+    return res
+      .status(404)
+      .json({ error: `No opportunity found with id ${id}.` });
   }
 
-  if (typeof reason !== "string") {
-    return res.status(400).json({
-      error: "reason is required and must be a string with at least 3 characters.",
-    });
-  }
-
-  const trimmedReason = reason.trim();
-
-  if (trimmedReason.length < 3) {
-    return res.status(400).json({
-      error: "reason must be at least 3 characters long.",
-    });
+  if (typeof reason !== "string" || reason.trim().length < 3) {
+    return res
+      .status(400)
+      .json({ error: "reason is required and must be at least 3 characters." });
   }
 
   const report = {
     id: reports.length + 1,
-    opportunityId: opportunity.id,
-    reason: trimmedReason,
+    opportunityId: id,
+    reason: reason.trim(),
     createdAt: new Date().toISOString(),
   };
 
   reports.push(report);
 
+  console.log(reports);
   res.status(201).json(report);
 }
