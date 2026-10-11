@@ -9,9 +9,9 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import healthRouter from "./routes/health.js";
 import opportunitiesRouter from "./routes/opportunities.js";
 import postsRouter from "./routes/posts.js";
+import healthRouter from "./routes/health.js";
 
 dotenv.config();
 

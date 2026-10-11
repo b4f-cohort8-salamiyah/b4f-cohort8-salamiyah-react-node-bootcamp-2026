@@ -35,16 +35,14 @@ function OpportunityDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
-  const [reason, setReason] = useState("");
+
+  const [reportReason, setReportReason] = useState("");
   const [isReporting, setIsReporting] = useState(false);
 
   async function load() {
     setIsLoading(true);
     setHasError(false);
     try {
-      // const opportunities = await fetchOpportunities();
-      // const match = opportunities.find((el) => String(el.id) === id) ?? null;
-
       const match = id ? await fetchOpportunityById(Number(id)) : null;
 
       if (match) {
@@ -81,19 +79,19 @@ function OpportunityDetailPage() {
   }
 
   async function handleReport() {
-    if (!opportunity || !reason.trim() || isReporting) return;
+    if (!opportunity) return;
 
     setIsReporting(true);
 
     try {
-      await reportOpportunity(opportunity.id, reason);
-      setReason("");
-      notify("Your report was submitted.", "success");
+      await reportOpportunity(opportunity.id, reportReason);
+      setReportReason("");
+      notify("Thanks — this listing has been reported.", "success");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Could not submit your report.";
+          : "Could not submit this report.";
       notify(message, "error");
     } finally {
       setIsReporting(false);
@@ -180,19 +178,18 @@ function OpportunityDetailPage() {
                   : "Apply"}
             </button>
 
-            <div>
-              <label htmlFor="report-reason">Report an issue</label>
+            <div className="report-opportunity">
               <input
-                id="report-reason"
                 type="text"
-                value={reason}
-                onChange={(event) => setReason(event.target.value)}
-                placeholder="Describe the issue"
-                disabled={isReporting}
+                className="report-reason-input"
+                placeholder="Report an issue with this listing..."
+                value={reportReason}
+                onChange={(event) => setReportReason(event.target.value)}
               />
               <button
+                className="report-button"
                 onClick={handleReport}
-                disabled={!reason.trim() || isReporting}
+                disabled={isReporting || reportReason.trim().length === 0}
               >
                 {isReporting ? "Reporting..." : "Report"}
               </button>

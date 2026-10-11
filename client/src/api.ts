@@ -4,7 +4,7 @@ const POSTS_URL = "/api/posts";
 const OPPORTUNITIES_URL = "/api/opportunities";
 const HEALTH_URL = "/api/health";
 
-export interface OpportunityReport {
+interface OpportunityReport {
   id: number;
   opportunityId: number;
   reason: string;
@@ -136,12 +136,10 @@ export async function reportOpportunity(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ reason }),
   });
-
   if (!response.ok) {
     throw new Error(
-      await readErrorMessage(response, "Could not submit your report."),
+      await readErrorMessage(response, "Could not submit this report."),
     );
   }
-
   return (await response.json()) as OpportunityReport;
 }

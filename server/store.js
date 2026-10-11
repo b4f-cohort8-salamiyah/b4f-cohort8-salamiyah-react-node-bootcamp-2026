@@ -1,7 +1,7 @@
 import { initialOpportunities, initialPosts } from "./data.js";
 
-export const opportunities = initialOpportunities;
-export const posts = initialPosts;
+export let opportunities = initialOpportunities;
+export let posts = [...initialPosts];
 export const ALLOWED_TYPES = ["job", "internship", "scholarship", "volunteer"];
 export const ALLOWED_CATEGORIES = [
   "announcement",
